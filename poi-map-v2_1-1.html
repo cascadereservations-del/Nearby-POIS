@@ -1,0 +1,1578 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  CASCADE HIDEAWAY — POI MAP  v2.1  "Royal Sapphire Edition"          ║
+  ║  Visual language unified with Dining Map v3.1                        ║
+  ║                                                                       ║
+  ║  CHANGES FROM v1.0:                                                   ║
+  ║  • Royal Sapphire metallic palette replaces warm gold accents         ║
+  ║  • Cards restyled: horizontal landscape (icon · text · chevron)       ║
+  ║  • Refined SVG ornamental divider (dining map style)                  ║
+  ║  • Branded SVG ring loader replaces emoji placeholder                 ║
+  ║  • Royal accent bar at top of detail panel (::before)                 ║
+  ║  • Inner border overlay on map container                              ║
+  ║  • Google Maps UI overrides for polish                                 ║
+  ║  • Section atmospheric radial gradients tuned to sapphire             ║
+  ║  • Filter tabs restyled to dining map pill style                      ║
+  ║  • All v1.0 functionality preserved intact                            ║
+  ║                                                                       ║
+  ║  ✅  API KEY CONFIGURED (v2.1)                                        ║
+  ║  Key: AIzaSyBEu5qN1QXT1Zt0nSdMnMNhsZH2CcKDvaM                      ║
+  ║  Status: Unrestricted — restrict to:                                  ║
+  ║    cascadereservations-del.github.io when ready                       ║
+  ║  Required APIs: Maps JavaScript API + Directions API                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nearby Places – Cascade Hideaway</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   CASCADE HIDEAWAY — POI MAP v2.1  "Royal Sapphire Edition"
+   Design language: Dining Map v3.1 · Namespace: --pm-
+════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Base palette ─────────────────────────────────────────────── */
+  --pm-mahogany:  #1C1006;
+  --pm-bg:        #F7F2E8;   /* official warm cream */
+  --pm-parchment: #FBF7EE;
+  --pm-surface:   rgba(251,247,238,0.92);
+  --pm-surface-2: rgba(255,255,255,0.97);
+  --pm-glass:     rgba(251,247,238,0.65);
+
+  /* ── Royal Sapphire — signature accent ───────────────────────── */
+  --pm-royal:         #1E4D8C;          /* deep royal blue            */
+  --pm-royal-lt:      #3D78C8;          /* metallic lighter blue      */
+  --pm-royal-dk:      #112D56;          /* deep navy                  */
+  --pm-royal-wash:    rgba(30,77,140,0.07);
+  --pm-royal-ring:    rgba(30,77,140,0.24);
+  --pm-royal-btn:     linear-gradient(135deg, #1E4D8C 0%, #4A8ED9 48%, #112D56 100%);
+  --pm-royal-line:    linear-gradient(90deg, transparent 0%, #1E4D8C 30%, #4A8ED9 50%, #1E4D8C 70%, transparent 100%);
+  --pm-shadow-royal:  0 0 0 3px rgba(30,77,140,0.20);
+
+  /* ── Text ─────────────────────────────────────────────────────── */
+  --pm-text-primary: #1C1006;
+  --pm-text-body:    #4A3D2A;
+  --pm-text-muted:   #8C7A60;
+  --pm-text-subtle:  #B8A898;
+
+  /* ── Borders ──────────────────────────────────────────────────── */
+  --pm-border: rgba(180,150,100,0.20);
+  --pm-sep:    rgba(180,150,100,0.14);
+
+  /* ── Category accent colors (unchanged) ──────────────────────── */
+  --c-store:    #2A5FA5;
+  --c-atm:      #1A7A40;
+  --c-fuel:     #A05020;
+  --c-pharmacy: #8A1A1A;
+  --c-cafe:     #6B4A2A;
+  --c-fitness:  #2A5A3A;
+  --c-resort:   #4A2A6A;
+
+  /* ── Typography ───────────────────────────────────────────────── */
+  --pm-font-display: 'Cormorant Garamond', Georgia, serif;
+  --pm-font-body:    'Raleway', system-ui, sans-serif;
+
+  /* ── Motion ───────────────────────────────────────────────────── */
+  --pm-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+  --pm-ease:   cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Radius ───────────────────────────────────────────────────── */
+  --pm-r-sm:   10px;
+  --pm-r-md:   16px;
+  --pm-r-lg:   22px;
+  --pm-r-pill: 100px;
+
+  /* ── Shadows ──────────────────────────────────────────────────── */
+  --pm-shadow-card:  0 2px 8px rgba(80,50,10,0.08), 0 6px 24px rgba(80,50,10,0.06);
+  --pm-shadow-float: 0 8px 40px rgba(28,16,6,0.18), 0 2px 8px rgba(28,16,6,0.10);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1C1006;
+  padding: 1rem;
+  font-family: var(--pm-font-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SECTION SHELL — atmospheric depth via sapphire radial glows
+════════════════════════════════════════════════════════════════════ */
+section.pm {
+  position: relative;
+  background:
+    radial-gradient(ellipse 340px 200px at 15% 0%,   rgba(30,77,140,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 280px 220px at 88% 100%, rgba(30,77,140,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 200px 140px at 50% 50%,  rgba(30,77,140,0.03) 0%, transparent 100%),
+    var(--pm-bg);
+  border-radius: var(--pm-r-lg);
+  overflow: hidden;
+  box-shadow: var(--pm-shadow-float);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Subtle grain texture overlay */
+section.pm::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23grain)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  border-radius: var(--pm-r-lg);
+}
+
+section.pm > * { position: relative; z-index: 1; }
+
+/* ════════════════════════════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════════════════════════════ */
+.pm-header {
+  padding: 1.5rem 1.5rem 0.6rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.pm-header-text { flex: 1; }
+
+.pm-eyebrow {
+  font-family: var(--pm-font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pm-royal-lt);
+  margin-bottom: 0.3rem;
+  opacity: 0.88;
+}
+
+.pm-title {
+  font-family: var(--pm-font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--pm-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+}
+
+.pm-badge {
+  background: var(--pm-royal-wash);
+  border: 1px solid var(--pm-royal-ring);
+  border-radius: var(--pm-r-pill);
+  padding: 0.3rem 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--pm-royal-lt);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0.3rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ORNAMENT — Refined SVG (dining map style, sapphire palette)
+════════════════════════════════════════════════════════════════════ */
+.pm-ornament {
+  padding: 0.55rem 1.5rem 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pm-ornament svg {
+  width: 100%;
+  max-width: 380px;
+  height: 14px;
+  display: block;
+  overflow: visible;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MAP WRAPPER
+════════════════════════════════════════════════════════════════════ */
+.pm-map-wrap {
+  position: relative;
+  margin: 0 1rem 0;
+  border-radius: var(--pm-r-md);
+  overflow: hidden;
+  box-shadow: var(--pm-shadow-card);
+  border: 1px solid var(--pm-border);
+  height: 232px;
+  background: #ede8da;
+}
+
+/* Inner border overlay — subtle sapphire tint */
+.pm-map-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--pm-r-md);
+  box-shadow: inset 0 0 0 1px rgba(30,77,140,0.10);
+  pointer-events: none;
+  z-index: 2;
+}
+
+#poiMap {
+  width: 100%;
+  height: 100%;
+  background: #ede8da;
+}
+
+/* Google Maps UI overrides */
+#poiMap .gm-style-cc,
+#poiMap .gmnoprint a,
+#poiMap .gmnoprint span,
+#poiMap .gm-style-cc span { display: none !important; }
+#poiMap .gm-bundled-control .gmnoprint { display: block !important; }
+#poiMap .gm-bundled-control button {
+  background: rgba(251,247,238,0.94) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid var(--pm-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--pm-shadow-card) !important;
+}
+
+/* ── Branded SVG ring loader ─────────────────────────────────────── */
+.pm-map-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ede8da;
+  gap: 0.75rem;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 3;
+}
+.pm-map-loading.hidden { opacity: 0; pointer-events: none; }
+
+.pm-map-loader-ring { width: 42px; height: 42px; }
+.pm-map-loader-ring circle { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.pm-map-loader-ring .track { stroke: rgba(30,77,140,0.16); }
+.pm-map-loader-ring .spin {
+  stroke: #1E4D8C;
+  stroke-dasharray: 56;
+  stroke-dashoffset: 42;
+  transform-origin: 50% 50%;
+  animation: pm-spin 1.1s linear infinite;
+}
+.pm-map-loader-pin {
+  position: absolute;
+  font-size: 1.1rem;
+  animation: pm-pin-bounce 1.1s ease-in-out infinite;
+}
+@keyframes pm-spin { to { transform: rotate(360deg); } }
+@keyframes pm-pin-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+.pm-map-loading-txt {
+  font-family: var(--pm-font-body);
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--pm-text-muted);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+/* ── Auth failure overlay ─────────────────────────────────────────── */
+.pm-map-fail {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--pm-parchment);
+  padding: 1.5rem;
+  text-align: center;
+  gap: 0.5rem;
+  z-index: 4;
+}
+.pm-map-fail-icon  { font-size: 2rem; }
+.pm-map-fail-title {
+  font-family: var(--pm-font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--pm-text-primary);
+}
+.pm-map-fail-sub {
+  font-size: 0.72rem;
+  color: var(--pm-text-muted);
+  line-height: 1.5;
+}
+.pm-map-fail-brand {
+  font-family: var(--pm-font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--pm-royal-lt);
+  margin-top: 0.25rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ROUTE BAR
+════════════════════════════════════════════════════════════════════ */
+.pm-route-bar {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.6rem 1rem 0;
+  padding: 0.55rem 0.9rem;
+  background: rgba(30,77,140,0.06);
+  border: 1px solid var(--pm-royal-ring);
+  border-radius: var(--pm-r-sm);
+  font-family: var(--pm-font-body);
+  font-size: 0.76rem;
+  color: var(--pm-text-body);
+  animation: pm-fadein 0.3s var(--pm-ease);
+}
+@keyframes pm-fadein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.pm-route-mode  { font-size: 1rem; flex-shrink: 0; }
+.pm-route-info  { flex: 1; }
+.pm-route-time  { font-weight: 600; color: var(--pm-text-primary); }
+.pm-route-dist  { color: var(--pm-text-muted); margin-left: 0.25rem; }
+
+.pm-route-go {
+  background: var(--pm-royal-btn);
+  color: #fff;
+  border: none;
+  border-radius: var(--pm-r-pill);
+  font-family: var(--pm-font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.32rem 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(30,77,140,0.32);
+  transition: box-shadow 0.2s, transform 0.15s var(--pm-spring);
+}
+.pm-route-go:hover {
+  box-shadow: 0 4px 14px rgba(30,77,140,0.48);
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CATEGORY FILTER TABS — dining map pill style
+════════════════════════════════════════════════════════════════════ */
+.pm-filters {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 1rem 1rem 0.5rem;
+}
+.pm-filters::-webkit-scrollbar { display: none; }
+
+.pm-filter-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.38rem 0.85rem;
+  border-radius: var(--pm-r-pill);
+  border: 1.5px solid rgba(140,110,60,0.20);
+  background: rgba(251,247,238,0.75);
+  color: var(--pm-text-muted);
+  font-family: var(--pm-font-body);
+  font-size: 0.70rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 240ms var(--pm-ease);
+  white-space: nowrap;
+  min-height: 34px;
+  box-shadow: 0 1px 4px rgba(80,50,10,0.06);
+  -webkit-tap-highlight-color: transparent;
+}
+.pm-filter-btn:hover {
+  border-color: var(--active-color, var(--pm-royal));
+  color: var(--active-color, var(--pm-royal));
+  background: rgba(255,255,255,0.90);
+}
+.pm-filter-btn.active {
+  background: var(--active-color, var(--pm-royal));
+  border-color: var(--active-color, var(--pm-royal));
+  color: #fff;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.18);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CAROUSEL
+════════════════════════════════════════════════════════════════════ */
+.pm-carousel-wrap { position: relative; padding: 0.5rem 0 0; }
+
+.pm-carousel {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.5rem 1rem 0.75rem;
+}
+.pm-carousel::-webkit-scrollbar { display: none; }
+
+/* ════════════════════════════════════════════════════════════════════
+   CARD — horizontal landscape (dining map style)
+════════════════════════════════════════════════════════════════════ */
+.pm-card {
+  flex-shrink: 0;
+  width: calc(100vw - 4.5rem);
+  max-width: 340px;
+  scroll-snap-align: center;
+  background: var(--pm-surface-2);
+  border: 1.5px solid var(--pm-border);
+  border-radius: var(--pm-r-md);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition:
+    border-color  280ms var(--pm-ease),
+    box-shadow    280ms var(--pm-ease),
+    transform     220ms var(--pm-spring);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 82px;
+  box-shadow: var(--pm-shadow-card);
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  position: relative;
+}
+.pm-card:active { transform: scale(0.97); }
+
+/* Sapphire shimmer sweep on active card */
+.pm-card.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(30,77,140,0.09) 40%,
+    rgba(74,142,217,0.14) 50%,
+    rgba(30,77,140,0.09) 60%,
+    transparent 80%
+  );
+  animation: pm-shimmer 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pm-shimmer {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.pm-card.active {
+  border-color: var(--pm-royal);
+  box-shadow: var(--pm-shadow-royal), var(--pm-shadow-card);
+}
+
+/* ── Icon square ─────────────────────────────────────────────────── */
+.pm-card-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: var(--pm-royal-wash);
+  border: 1px solid var(--pm-royal-ring);
+  transition: background 280ms var(--pm-ease), border-color 280ms var(--pm-ease);
+  position: relative;
+}
+.pm-card.active .pm-card-icon {
+  background: linear-gradient(135deg, rgba(30,77,140,0.12), rgba(74,142,217,0.08));
+  border-color: rgba(30,77,140,0.30);
+}
+
+.pm-card-emoji { font-size: 1.5rem; position: relative; z-index: 1; }
+
+/* Walk badge — overlaid top-right of icon */
+.pm-card-walk-badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  background: #1A7A40;
+  color: #fff;
+  font-family: var(--pm-font-body);
+  font-size: 0.50rem;
+  font-weight: 700;
+  padding: 0.1rem 0.28rem;
+  border-radius: var(--pm-r-pill);
+  z-index: 2;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────── */
+.pm-card-body { flex: 1; min-width: 0; }
+
+.pm-card-label {
+  font-family: var(--pm-font-body);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--pm-text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.pm-card-name {
+  font-family: var(--pm-font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--pm-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+  transition: color 280ms var(--pm-ease);
+  margin-bottom: 0.22rem;
+}
+.pm-card.active .pm-card-name { color: var(--pm-royal); }
+
+.pm-card-dist {
+  display: flex;
+  align-items: center;
+  gap: 0.22rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--pm-text-subtle);
+  letter-spacing: 0.02em;
+}
+.pm-card-dist svg { flex-shrink: 0; opacity: 0.65; }
+
+/* ── Chevron ──────────────────────────────────────────────────────── */
+.pm-card-chev {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(120,90,50,0.07);
+  transition: background 280ms var(--pm-ease);
+}
+.pm-card.active .pm-card-chev { background: var(--pm-royal-wash); }
+.pm-card.active .pm-card-chev svg polyline { stroke: var(--pm-royal); }
+
+/* ════════════════════════════════════════════════════════════════════
+   NAV DOTS
+════════════════════════════════════════════════════════════════════ */
+.pm-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 0 0.65rem;
+}
+.pm-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(30,77,140,0.18);
+  cursor: pointer;
+  transition: all 320ms var(--pm-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+.pm-dot.active { width: 20px; background: var(--pm-royal); }
+
+/* ════════════════════════════════════════════════════════════════════
+   DETAIL PANEL
+════════════════════════════════════════════════════════════════════ */
+.pm-detail {
+  margin: 0 1rem 1.25rem;
+  background: var(--pm-surface-2);
+  border: 1px solid var(--pm-border);
+  border-radius: var(--pm-r-md);
+  box-shadow: var(--pm-shadow-card);
+  overflow: hidden;
+  animation: pm-fadein 0.3s var(--pm-ease);
+}
+
+/* Royal metallic accent bar at top */
+.pm-detail::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: var(--pm-royal-btn);
+}
+
+.pm-d-inner { padding: 1rem; }
+
+.pm-d-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.pm-d-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--pm-r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.pm-d-meta { flex: 1; }
+
+.pm-d-cat {
+  font-family: var(--pm-font-body);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.pm-d-name {
+  font-family: var(--pm-font-display);
+  font-size: 1.18rem;
+  font-weight: 500;
+  color: var(--pm-text-primary);
+  line-height: 1.2;
+}
+
+.pm-d-sub {
+  font-size: 0.70rem;
+  color: var(--pm-text-muted);
+  margin-top: 0.1rem;
+}
+
+.pm-d-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  margin-bottom: 0.85rem;
+}
+
+.pm-d-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--pm-text-body);
+  line-height: 1.45;
+}
+.pm-d-row-icon { font-size: 0.82rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+.pm-d-tip {
+  font-size: 0.72rem;
+  color: var(--pm-text-body);
+  background: var(--pm-royal-wash);
+  border-left: 2.5px solid var(--pm-royal);
+  border-radius: 0 var(--pm-r-sm) var(--pm-r-sm) 0;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.85rem;
+  line-height: 1.55;
+}
+.pm-d-tip strong {
+  display: block;
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pm-royal-lt);
+  margin-bottom: 0.28rem;
+}
+
+.pm-d-ctas { display: flex; gap: 0.5rem; }
+
+.pm-d-cta-route {
+  flex: 1;
+  background: var(--pm-royal-btn);
+  color: #fff;
+  border: none;
+  border-radius: var(--pm-r-sm);
+  font-family: var(--pm-font-body);
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.68rem 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  box-shadow: 0 3px 14px rgba(30,77,140,0.38);
+  transition: opacity 200ms ease, transform 150ms var(--pm-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+.pm-d-cta-route:active { opacity: 0.85; transform: scale(0.98); }
+
+.pm-d-cta-maps {
+  flex: 1;
+  background: transparent;
+  color: var(--pm-royal);
+  border: 1.5px solid var(--pm-royal-ring);
+  border-radius: var(--pm-r-sm);
+  font-family: var(--pm-font-body);
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.68rem 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pm-d-cta-maps:hover {
+  background: var(--pm-royal-wash);
+  border-color: var(--pm-royal);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════════════════════════════ */
+.pm-footer-sep {
+  margin: 0 1.5rem;
+  height: 1px;
+  background: var(--pm-royal-line);
+  opacity: 0.50;
+}
+
+.pm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.5rem 1.2rem;
+}
+
+.pm-footer-note {
+  font-family: var(--pm-font-body);
+  font-size: 0.60rem;
+  color: var(--pm-text-subtle);
+  font-style: italic;
+}
+
+.pm-footer-brand {
+  font-family: var(--pm-font-display);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--pm-royal-lt);
+  letter-spacing: 0.06em;
+  opacity: 0.85;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   EMPTY STATE
+════════════════════════════════════════════════════════════════════ */
+.pm-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--pm-text-muted);
+  font-size: 0.8rem;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<section class="pm" role="region" aria-label="Nearby Places">
+
+  <!-- HEADER -->
+  <div class="pm-header">
+    <div class="pm-header-text">
+      <p class="pm-eyebrow">Near Cascade Hideaway</p>
+      <h2 class="pm-title">What's Nearby</h2>
+    </div>
+    <span class="pm-badge" id="pmBadge">15 Places</span>
+  </div>
+
+  <!-- ORNAMENT — refined SVG, sapphire palette -->
+  <div class="pm-ornament" aria-hidden="true">
+    <svg viewBox="0 0 300 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="pmOrnL" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1E4D8C" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#1E4D8C" stop-opacity="0.55"/>
+        </linearGradient>
+        <linearGradient id="pmOrnR" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1E4D8C" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#1E4D8C" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- Left arm -->
+      <line x1="0"   y1="7" x2="126" y2="7" stroke="url(#pmOrnL)" stroke-width="0.8"/>
+      <!-- Left dot -->
+      <circle cx="130" cy="7" r="1.5" fill="#1E4D8C" opacity="0.55"/>
+      <!-- Center diamond -->
+      <path d="M140,7 L150,2 L160,7 L150,12 Z"
+        fill="none" stroke="#3D78C8" stroke-width="1.1" stroke-linejoin="round" opacity="0.75"/>
+      <path d="M142.5,7 L150,4 L157.5,7 L150,10 Z"
+        fill="#1E4D8C" opacity="0.22"/>
+      <!-- Right dot -->
+      <circle cx="170" cy="7" r="1.5" fill="#1E4D8C" opacity="0.55"/>
+      <!-- Right arm -->
+      <line x1="174" y1="7" x2="300" y2="7" stroke="url(#pmOrnR)" stroke-width="0.8"/>
+    </svg>
+  </div>
+
+  <!-- MAP -->
+  <div class="pm-map-wrap">
+    <div id="poiMap"></div>
+    <!-- Branded loading overlay -->
+    <div class="pm-map-loading" id="pmMapLoading">
+      <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+        <svg class="pm-map-loader-ring" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+          <circle class="track" cx="21" cy="21" r="17"/>
+          <circle class="spin"  cx="21" cy="21" r="17" transform="rotate(-90 21 21)"/>
+        </svg>
+        <span class="pm-map-loader-pin">📍</span>
+      </div>
+      <div class="pm-map-loading-txt">Loading map…</div>
+    </div>
+    <!-- API key failure overlay -->
+    <div class="pm-map-fail" id="pmMapFail">
+      <span class="pm-map-fail-icon">📍</span>
+      <p class="pm-map-fail-title">Map Unavailable</p>
+      <p class="pm-map-fail-sub">Map preview requires a valid API key.<br>All place links open in Google Maps.</p>
+      <p class="pm-map-fail-brand">Cascade Hideaway</p>
+    </div>
+  </div>
+
+  <!-- ROUTE BAR -->
+  <div class="pm-route-bar" id="pmRouteBar" role="status" aria-live="polite">
+    <span class="pm-route-mode" id="pmRouteModeIcon">🚗</span>
+    <span class="pm-route-info">
+      <span class="pm-route-time" id="pmRouteTime"></span>
+      <span class="pm-route-dist" id="pmRouteDist"></span>
+    </span>
+    <a class="pm-route-go" id="pmRouteGo" href="#" target="_blank" rel="noopener noreferrer">
+      Get Directions
+    </a>
+  </div>
+
+  <!-- CATEGORY FILTERS -->
+  <div class="pm-filters" role="tablist" aria-label="Filter by category">
+    <button class="pm-filter-btn active" data-cat="all" role="tab"
+      style="--active-color: var(--pm-royal);" onclick="pmSetFilter('all', this)">
+      🗺 All
+    </button>
+    <button class="pm-filter-btn" data-cat="store" role="tab"
+      style="--active-color: var(--c-store);" onclick="pmSetFilter('store', this)">
+      🛒 Stores
+    </button>
+    <button class="pm-filter-btn" data-cat="cafe" role="tab"
+      style="--active-color: var(--c-cafe);" onclick="pmSetFilter('cafe', this)">
+      ☕ Café
+    </button>
+    <button class="pm-filter-btn" data-cat="pharmacy" role="tab"
+      style="--active-color: var(--c-pharmacy);" onclick="pmSetFilter('pharmacy', this)">
+      💊 Pharmacy
+    </button>
+    <button class="pm-filter-btn" data-cat="fuel" role="tab"
+      style="--active-color: var(--c-fuel);" onclick="pmSetFilter('fuel', this)">
+      ⛽ Fuel
+    </button>
+    <button class="pm-filter-btn" data-cat="atm" role="tab"
+      style="--active-color: var(--c-atm);" onclick="pmSetFilter('atm', this)">
+      🏧 ATM
+    </button>
+    <button class="pm-filter-btn" data-cat="fitness" role="tab"
+      style="--active-color: var(--c-fitness);" onclick="pmSetFilter('fitness', this)">
+      💪 Fitness
+    </button>
+    <button class="pm-filter-btn" data-cat="resort" role="tab"
+      style="--active-color: var(--c-resort);" onclick="pmSetFilter('resort', this)">
+      🏊 Resort
+    </button>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="pm-carousel-wrap">
+    <div class="pm-carousel" id="pmCarousel" role="list" aria-label="Nearby places"></div>
+  </div>
+  <div class="pm-empty" id="pmEmpty">No places found in this category.</div>
+
+  <!-- DOTS -->
+  <div class="pm-dots" id="pmDots" aria-hidden="true"></div>
+
+  <!-- DETAIL PANEL -->
+  <div class="pm-detail" id="pmDetail" role="region" aria-label="Place details"></div>
+
+  <!-- FOOTER -->
+  <div class="pm-footer-sep" aria-hidden="true"></div>
+  <footer class="pm-footer">
+    <span class="pm-footer-note">Tap a card to navigate</span>
+    <span class="pm-footer-brand">Cascade Hideaway</span>
+  </footer>
+
+</section>
+
+<script>
+  /* ══════════════════════════════════════════════════════════════════
+     POI DATA — 15 entries, all coordinates verified
+  ══════════════════════════════════════════════════════════════════ */
+  const PM = [
+    {
+      id: 1,
+      name: 'JJ Marketing',
+      sub: 'Lumina Estate',
+      cat: 'store',
+      label: 'General Store',
+      emoji: '🛒',
+      hex: '#2A5FA5',
+      lat: 6.1529973, lng: 125.1872715,
+      dist: '380 m', time: '~4 min', walkable: true,
+      addr: 'BLK 15 LOT 11, Lumina Estate, Conel Road',
+      hours: 'Typically daily – confirm locally',
+      note: 'Nearest general merchandise store – basic goods, snacks, drinks. Walking distance from Cascade.',
+      maps: 'https://www.google.com/maps/place/BLK15+LOT+11,+JJ+Marketing,+LUMINA+ESTATE,+General+Santos+City',
+    },
+    {
+      id: 2,
+      name: 'Square Run Store',
+      sub: 'Bria Homes',
+      cat: 'store',
+      label: 'In-Subdivision Store',
+      emoji: '🛒',
+      hex: '#2A5FA5',
+      lat: 6.1530085, lng: 125.1878090,
+      dist: '450 m', time: '~4 min', walkable: true,
+      addr: 'Block 22, Lot 2, Bria Homes, San Isidro (Lagao 2nd)',
+      hours: 'Typically daily – confirm locally',
+      note: 'Convenience store inside the Bria Homes subdivision. Quick run for essentials without leaving the complex.',
+      maps: 'https://www.google.com/maps/place/Block+22+Lot+2,+Square+Run+Store+Bria+Homes',
+    },
+    {
+      id: 3,
+      name: 'Coffee Project Gensan',
+      sub: 'Katangawan',
+      cat: 'cafe',
+      label: 'Specialty Coffee',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.16529, lng: 125.1959179,
+      dist: '2.27 km', time: '~5 min', walkable: false,
+      addr: 'Katangawan, General Santos City',
+      hours: 'Confirm via Facebook',
+      note: 'Part of the Coffee Project chain – reliable specialty coffee in a well-designed space. Good for a work session or a slow afternoon.',
+      maps: 'https://www.google.com/maps/place/Coffee+Project+Gensan,+Katangawan',
+    },
+    {
+      id: 4,
+      name: 'Bean Basket Garden Cafe',
+      sub: 'Rivera Farm – Nursery Road',
+      cat: 'cafe',
+      label: 'Garden Cafe',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.1382549, lng: 125.2005946,
+      dist: '3.35 km', time: '~7 min', walkable: false,
+      addr: 'Rivera Farm, V.G. Nursery Road, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Outdoor garden setting on Nursery Road – a relaxed, photogenic cafe surrounded by greenery. Popular for afternoon hangouts.',
+      maps: 'https://www.google.com/maps/place/Bean+Basket+Garden+Cafe',
+    },
+    {
+      id: 5,
+      name: 'Edsai Cafe',
+      sub: 'NLSA Road',
+      cat: 'cafe',
+      label: 'Local Cafe',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.1298508, lng: 125.1913247,
+      dist: '3.82 km', time: '~8 min', walkable: false,
+      addr: 'NLSA Road, General Santos City',
+      hours: 'Confirm via Facebook',
+      note: 'Community-facing cafe on NLSA Road – accessible by habal-habal or tricycle. Good local coffee at everyday prices.',
+      maps: 'https://www.google.com/maps/place/Edsai+Caf%C3%A9,+NLSA+Rd',
+    },
+    {
+      id: 6,
+      name: 'BJKFITNESS Gym Equipment',
+      sub: 'Near Nursery Road',
+      cat: 'fitness',
+      label: 'Gym Supplies',
+      emoji: '💪',
+      hex: '#2A5A3A',
+      lat: 6.1439996, lng: 125.1930647,
+      dist: '1.97 km', time: '~4 min', walkable: false,
+      addr: '45VV+H6W, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Fitness equipment retailer near the Nursery Road area. Useful for resistance bands, weights, or accessories during a longer stay.',
+      maps: 'https://www.google.com/maps/place/45VV%2BH6W+BJKFITNESS+GYM+EQUIPMENT+SHOP',
+    },
+    {
+      id: 7,
+      name: 'EM-Jake Aquawave Resort',
+      sub: 'Nursery Road',
+      cat: 'resort',
+      label: 'Resort Hotel',
+      emoji: '🏊',
+      hex: '#4A2A6A',
+      lat: 6.1447567, lng: 125.1952034,
+      dist: '2.09 km', time: '~4 min', walkable: false,
+      addr: 'Nursery Road, General Santos City',
+      hours: 'Call ahead for pool hours',
+      note: 'The closest resort to Cascade Hideaway – wave pool, function rooms, and overnight accommodations. A solid day-trip option for guests wanting a swim.',
+      maps: 'https://www.google.com/maps/place/EM-Jake+Aquawave+Resort+Hotel+and+Convention+Center',
+    },
+    {
+      id: 8,
+      name: 'Gensan View Resort',
+      sub: 'Nursery Road – Purok 18',
+      cat: 'resort',
+      label: 'Resort – Leisure',
+      emoji: '🏖️',
+      hex: '#4A2A6A',
+      lat: 6.1489675, lng: 125.2022415,
+      dist: '2.67 km', time: '~6 min', walkable: false,
+      addr: 'Nursery Road, Purok 18, General Santos City',
+      hours: 'Open daily – confirm hours',
+      note: 'Scenic resort on the Nursery Road strip – popular with local families. Good for an afternoon swim or weekend leisure.',
+      maps: 'https://www.google.com/maps/place/Gensan+View+Resort',
+    },
+    {
+      id: 9,
+      name: "Mix N' Magic Conel Branch",
+      sub: 'Conel-Olympog Road',
+      cat: 'store',
+      label: 'Party Supplies – Sari-Sari',
+      emoji: '🎉',
+      hex: '#2A5FA5',
+      lat: 6.1368353, lng: 125.1888476,
+      dist: '2.71 km', time: '~6 min', walkable: false,
+      addr: 'Conel-Olympog Rd, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Party supplies, novelties, and general merchandise along the main Conel Road corridor. Useful for event prep or grab-and-go items.',
+      maps: "https://www.google.com/maps/place/Mix+N'+Magic+Conel+Branch",
+    },
+    {
+      id: 10,
+      name: 'Brigada Pharmacy',
+      sub: 'Sunrise Lagao',
+      cat: 'pharmacy',
+      label: 'Pharmacy',
+      emoji: '💊',
+      hex: '#8A1A1A',
+      lat: 6.1318388, lng: 125.1882054,
+      dist: '3.44 km', time: '~7 min', walkable: false,
+      addr: '45JQ+P7P, General Santos City',
+      hours: 'Daily – hours may vary',
+      note: 'Nearest verified pharmacy south of Cascade along the NLSA-Conel corridor. Stock up on essentials, OTC meds, and first aid.',
+      maps: 'https://www.google.com/maps/place/45JQ%2BP7P+Brigada+Pharmacy+Sunrise+Lagao',
+    },
+    {
+      id: 11,
+      name: 'Riavin Peoples Petroleum',
+      sub: 'Conel Road – Closest',
+      cat: 'fuel',
+      label: 'Gas Station',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.147021, lng: 125.1889489,
+      dist: '1.3 km', time: '~3 min', walkable: false,
+      addr: 'Conel-Olympog Rd, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Closest fuel station to Cascade Hideaway – right on Conel Road, the same route guests take going in or out of the subdivision.',
+      maps: 'https://www.google.com/maps/place/RIAVIN+PEOPLES+PETROLEUM+CORP.+CONEL+ROAD/@6.147021,125.1889489',
+    },
+    {
+      id: 12,
+      name: 'Riavin',
+      sub: 'Katangawan',
+      cat: 'fuel',
+      label: 'Gas Station',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.1653633, lng: 125.1915207,
+      dist: '1.9 km', time: '~4 min', walkable: false,
+      addr: 'Katangawan, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Second Riavin station slightly north – useful on the way toward Katangawan or Coffee Project. Alternative if the Conel branch is busy.',
+      maps: 'https://www.google.com/maps/place/Riavin/@6.1653633,125.1915207',
+    },
+    {
+      id: 13,
+      name: 'Petron NLSA Road',
+      sub: 'NLSA Road – Brgy. San Isidro',
+      cat: 'fuel',
+      label: 'Gas Station – GCash/PayMaya',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.136001, lng: 125.189423,
+      dist: '2.50 km', time: '~5 min', walkable: false,
+      addr: 'NLSA Road cor. Conel-Olympog Rd, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Petron station at the NLSA Road-Conel intersection – has PayMaya/GCash top-up. The station most tricycle drivers use as a city-side landmark.',
+      maps: 'https://www.google.com/maps?q=6.136001,125.189423',
+    },
+    {
+      id: 14,
+      name: 'BDO ATM – Lagao',
+      sub: 'J. Catolico Sr. Ave.',
+      cat: 'atm',
+      label: 'Bank – ATM',
+      emoji: '🏦',
+      hex: '#1A7A40',
+      lat: 6.127801, lng: 125.195605,
+      dist: '3.80 km', time: '~8 min', walkable: false,
+      addr: 'BDO Network Bank, Jose Catolico Sr. Ave., Lagao, General Santos City',
+      hours: '24/7 ATM Access',
+      note: 'Reliable BDO branch on the main Lagao commercial strip. Tricycle from Bria gate drops you close to the entrance.',
+      maps: 'https://www.google.com/maps?q=6.127801,125.195605',
+    },
+    {
+      id: 15,
+      name: 'Metrobank ATM – Lagao',
+      sub: 'Gaisano Mall',
+      cat: 'atm',
+      label: 'Bank – ATM',
+      emoji: '💳',
+      hex: '#1A7A40',
+      lat: 6.124110, lng: 125.187640,
+      dist: '4.10 km', time: '~9 min', walkable: false,
+      addr: 'Gaisano Mall of GenSan, J. Catolico Ave., Lagao, General Santos City',
+      hours: 'Mall hours (10AM–9PM)',
+      note: 'Metrobank ATM inside Gaisano Mall. Preferred for large withdrawals during mall hours – well-lit and supervised.',
+      maps: 'https://www.google.com/maps?q=6.124110,125.187640',
+    },
+  ];
+
+  /* ══════════════════════════════════════════════════════════════════
+     CONSTANTS & STATE
+  ══════════════════════════════════════════════════════════════════ */
+  const ORIGIN = { lat: 6.1545469, lng: 125.1852321 };
+
+  let poiMap = null;
+  let directionsService = null;
+  let directionsRenderer = null;
+  let poiMarkers = [];
+  let destMarker = null;
+
+  let pmActiveFilter = 'all';
+  let pmFilteredData = [...PM];
+  let pmActiveIndex = 0;
+
+  /* ══════════════════════════════════════════════════════════════════
+     UTILITY: Haversine distance in metres
+  ══════════════════════════════════════════════════════════════════ */
+  function haversineM(lat1, lng1, lat2, lng2) {
+    const R = 6371000;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2
+            + Math.cos(lat1 * Math.PI / 180)
+            * Math.cos(lat2 * Math.PI / 180)
+            * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     MAP ICONS
+  ══════════════════════════════════════════════════════════════════ */
+  function pmHomeIcon() {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+      <defs>
+        <filter id="hs"><feDropShadow dx="0" dy="2" stdDeviation="2"
+          flood-color="rgba(0,0,0,0.35)"/></filter>
+      </defs>
+      <path d="M18,42 C16,38 4,28 4,18 A14,14 0 1 1 32,18 C32,28 20,38 18,42Z"
+        fill="#C9963A" stroke="#ffffff" stroke-width="2.5" filter="url(#hs)"/>
+      <text x="18" y="22" text-anchor="middle" font-size="13"
+        font-family="Arial,sans-serif">🏠</text>
+    </svg>`;
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(36, 44),
+      anchor: new google.maps.Point(18, 43),
+    };
+  }
+
+  function pmDestIcon(r) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="42" viewBox="0 0 34 42">
+      <defs>
+        <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2"
+          flood-color="rgba(0,0,0,0.3)"/></filter>
+      </defs>
+      <path d="M17,40 C15,36 3,26 3,17 A14,14 0 1 1 31,17 C31,26 19,36 17,40Z"
+        fill="${r.hex}" stroke="#ffffff" stroke-width="2" filter="url(#ds)"/>
+      <text x="17" y="21" text-anchor="middle" font-size="12"
+        font-family="Arial,sans-serif">${r.emoji}</text>
+    </svg>`;
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(34, 42),
+      anchor: new google.maps.Point(17, 41),
+    };
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     MAPS INIT CALLBACK
+  ══════════════════════════════════════════════════════════════════ */
+  window.initPoiMap = function () {
+    const mapStyles = [
+      { elementType: 'geometry',           stylers: [{ color: '#f5efe0' }] },
+      { elementType: 'labels.text.fill',   stylers: [{ color: '#4a3d2a' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#faf5e8' }] },
+      { featureType: 'water',              elementType: 'geometry',   stylers: [{ color: '#b8d4e8' }] },
+      { featureType: 'road',               elementType: 'geometry',   stylers: [{ color: '#e8dfc4' }] },
+      { featureType: 'road.highway',       elementType: 'geometry',   stylers: [{ color: '#d4c49a' }] },
+      { featureType: 'poi',                elementType: 'geometry',   stylers: [{ color: '#ddd5bc' }] },
+      { featureType: 'poi.park',           elementType: 'geometry',   stylers: [{ color: '#c8d8b4' }] },
+      { featureType: 'transit',            stylers: [{ visibility: 'off' }] },
+    ];
+
+    poiMap = new google.maps.Map(document.getElementById('poiMap'), {
+      center: ORIGIN,
+      zoom: 16,
+      styles: mapStyles,
+      disableDefaultUI: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      clickableIcons: false,
+      gestureHandling: 'cooperative',
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: '#1E4D8C',   /* royal sapphire route line */
+        strokeWeight: 4,
+        strokeOpacity: 0.82,
+      },
+    });
+    directionsRenderer.setMap(poiMap);
+
+    /* Home marker — always visible */
+    new google.maps.Marker({
+      position: ORIGIN,
+      map: poiMap,
+      icon: pmHomeIcon(),
+      title: 'Cascade Hideaway',
+      zIndex: 9999,
+    });
+
+    poiMap.addListenerOnce('idle', () => {
+      document.getElementById('pmMapLoading').classList.add('hidden');
+    });
+
+    /* Route to the currently active place if set */
+    const active = pmFilteredData[pmActiveIndex];
+    if (active) pmRouteToActive(active);
+  };
+
+  /* ══════════════════════════════════════════════════════════════════
+     AUTH FAILURE FALLBACK
+  ══════════════════════════════════════════════════════════════════ */
+  window.gm_authFailure = function () {
+    document.getElementById('pmMapLoading').style.display = 'none';
+    document.getElementById('pmMapFail').style.display = 'flex';
+    document.getElementById('pmRouteBar').style.display = 'none';
+  };
+
+  /* ══════════════════════════════════════════════════════════════════
+     ROUTE LOGIC
+  ══════════════════════════════════════════════════════════════════ */
+  function pmRouteToActive(r) {
+    if (!directionsService || !poiMap) return;
+
+    const isWalkable = haversineM(ORIGIN.lat, ORIGIN.lng, r.lat, r.lng) <= 600;
+
+    directionsService.route(
+      {
+        origin: ORIGIN,
+        destination: { lat: r.lat, lng: r.lng },
+        travelMode: isWalkable
+          ? google.maps.TravelMode.WALKING
+          : google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === 'OK') {
+          directionsRenderer.setDirections(result);
+          pmPlaceDestMarker(r);
+          const leg = result.routes[0].legs[0];
+          pmUpdateRouteBar(leg.distance.text, leg.duration.text, isWalkable, r);
+        } else {
+          /* Fallback: pan to destination, show static data */
+          directionsRenderer.setDirections({ routes: [] });
+          poiMap.panTo({ lat: r.lat, lng: r.lng });
+          pmPlaceDestMarker(r);
+          pmUpdateRouteBar(r.dist, r.time + ' drive', r.walkable, r);
+        }
+      }
+    );
+  }
+
+  function pmPlaceDestMarker(r) {
+    if (destMarker) destMarker.setMap(null);
+    destMarker = new google.maps.Marker({
+      position: { lat: r.lat, lng: r.lng },
+      map: poiMap,
+      icon: pmDestIcon(r),
+      title: r.name,
+      zIndex: 100,
+    });
+  }
+
+  function pmUpdateRouteBar(dist, time, isWalk, r) {
+    const bar = document.getElementById('pmRouteBar');
+    bar.style.display = 'flex';
+    document.getElementById('pmRouteModeIcon').textContent = isWalk ? '🚶' : '🚗';
+    document.getElementById('pmRouteTime').textContent = time + '  ';
+    document.getElementById('pmRouteDist').textContent = dist;
+    const go = document.getElementById('pmRouteGo');
+    go.href = `https://www.google.com/maps/dir/${ORIGIN.lat},${ORIGIN.lng}/${r.lat},${r.lng}`;
+  }
+
+  function pmClearRoute() {
+    if (directionsRenderer) directionsRenderer.setDirections({ routes: [] });
+    if (destMarker) { destMarker.setMap(null); destMarker = null; }
+    document.getElementById('pmRouteBar').style.display = 'none';
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     FILTER
+  ══════════════════════════════════════════════════════════════════ */
+  function pmSetFilter(cat, btn) {
+    pmActiveFilter = cat;
+
+    document.querySelectorAll('.pm-filter-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    pmFilteredData = cat === 'all' ? [...PM] : PM.filter(r => r.cat === cat);
+    pmActiveIndex = 0;
+
+    pmClearRoute();
+    pmRenderAll();
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     RENDER
+  ══════════════════════════════════════════════════════════════════ */
+  function pmRenderAll() {
+    pmRenderCarousel();
+    pmRenderDots();
+    if (pmFilteredData.length > 0) {
+      pmActivate(0, false);
+    } else {
+      document.getElementById('pmDetail').innerHTML = '';
+      document.getElementById('pmEmpty').style.display = 'block';
+    }
+    document.getElementById('pmBadge').textContent =
+      pmFilteredData.length + (pmActiveFilter === 'all' ? ' Places' : ' Found');
+  }
+
+  function pmRenderCarousel() {
+    const wrap  = document.getElementById('pmCarousel');
+    const empty = document.getElementById('pmEmpty');
+
+    if (pmFilteredData.length === 0) {
+      wrap.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    wrap.innerHTML = pmFilteredData.map((r, i) => {
+      const modeIcon  = r.walkable ? '🚶' : '🚗';
+      const walkBadge = r.walkable
+        ? `<span class="pm-card-walk-badge">🚶 Walk</span>`
+        : '';
+
+      return `
+        <div class="pm-card" role="listitem" data-index="${i}"
+          onclick="pmActivate(${i}, true)"
+          aria-label="${r.name}, ${r.label}, ${r.dist}"
+          aria-selected="false" id="pmCard${i}">
+
+          <div class="pm-card-icon" style="background:${r.hex}14; border-color:${r.hex}38;">
+            <span class="pm-card-emoji">${r.emoji}</span>
+            ${walkBadge}
+          </div>
+
+          <div class="pm-card-body">
+            <div class="pm-card-label" style="color:${r.hex};">${r.label}</div>
+            <div class="pm-card-name">${r.name}</div>
+            <div class="pm-card-dist">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              ${r.dist} · ${modeIcon} ${r.time}
+            </div>
+          </div>
+
+          <div class="pm-card-chev">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="#8C7A60" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function pmRenderDots() {
+    const wrap = document.getElementById('pmDots');
+    if (pmFilteredData.length <= 1) { wrap.innerHTML = ''; return; }
+    wrap.innerHTML = pmFilteredData.map((_, i) =>
+      `<div class="pm-dot${i === pmActiveIndex ? ' active' : ''}"
+        onclick="pmScrollToCard(${i})" aria-label="Place ${i + 1}"></div>`
+    ).join('');
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ACTIVATE
+  ══════════════════════════════════════════════════════════════════ */
+  function pmActivate(i, animate) {
+    pmActiveIndex = i;
+    const r = pmFilteredData[i];
+
+    document.querySelectorAll('.pm-card').forEach((el, idx) => {
+      el.classList.toggle('active', idx === i);
+      el.setAttribute('aria-selected', idx === i ? 'true' : 'false');
+    });
+
+    document.querySelectorAll('.pm-dot').forEach((el, idx) =>
+      el.classList.toggle('active', idx === i));
+
+    if (poiMap && directionsService) pmRouteToActive(r);
+
+    pmRenderDetail(r, i);
+
+    if (animate) pmScrollToCard(i);
+  }
+
+  function pmScrollToCard(i) {
+    const card = document.getElementById('pmCard' + i);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    setTimeout(() => {
+      document.querySelectorAll('.pm-dot').forEach((el, idx) =>
+        el.classList.toggle('active', idx === i));
+    }, 50);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     DETAIL PANEL
+  ══════════════════════════════════════════════════════════════════ */
+  function pmRenderDetail(r, i) {
+    const modeIcon   = r.walkable ? '🚶' : '🚗';
+    const travelLabel = r.walkable
+      ? `${r.dist} from Cascade · ${r.time} walk`
+      : `${r.dist} from Cascade Hideaway · ${r.time} drive`;
+
+    document.getElementById('pmDetail').innerHTML = `
+      <div class="pm-d-inner">
+        <div class="pm-d-header">
+          <div class="pm-d-icon" style="background:${r.hex}14;">
+            <span style="font-size:1.3rem;">${r.emoji}</span>
+          </div>
+          <div class="pm-d-meta">
+            <div class="pm-d-cat" style="color:${r.hex};">${r.label}</div>
+            <div class="pm-d-name">${r.name}</div>
+            <div class="pm-d-sub">${r.sub}</div>
+          </div>
+        </div>
+
+        <div class="pm-d-rows">
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">📍</span>
+            <span>${r.addr}</span>
+          </div>
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">🕐</span>
+            <span>${r.hours}</span>
+          </div>
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">${modeIcon}</span>
+            <span>${travelLabel}</span>
+          </div>
+        </div>
+
+        <div class="pm-d-tip">
+          <strong>Local Tip</strong>
+          ${r.note}
+        </div>
+
+        <div class="pm-d-ctas">
+          <button class="pm-d-cta-route" onclick="pmActivate(${i}, false)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12h18M13 5l7 7-7 7"/>
+            </svg>
+            Show Route
+          </button>
+          <a class="pm-d-cta-maps" href="${r.maps}" target="_blank" rel="noopener noreferrer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Open Maps
+          </a>
+        </div>
+      </div>`;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     BOOT — carousel renders on DOMContentLoaded, no Maps dependency
+  ══════════════════════════════════════════════════════════════════ */
+  document.addEventListener('DOMContentLoaded', () => {
+    pmFilteredData = [...PM];
+    pmRenderAll();
+  });
+</script>
+
+<!-- Google Maps API v2.1 — key active, unrestricted -->
+<script
+  async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEu5qN1QXT1Zt0nSdMnMNhsZH2CcKDvaM&callback=initPoiMap&loading=async">
+</script>
+
+</body>
+</html>
