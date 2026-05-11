@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nearby Places - Cascade Hideaway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       CASCADE HIDEAWAY - POI MAP v1.0
+       CSS Variable Namespace: --pm-  (poi-map)
+       ============================================================ */
+
+    :root {
+      /* Official Cascade palette */
+      --pm-mahogany:    #1C1006;
+      --pm-bg:          #F7F2E8;
+      --pm-parchment:   #FBF7EE;
+      --pm-surface:     rgba(251,247,238,0.92);
+      --pm-surface-2:   rgba(255,255,255,0.97);
+
+      /* Gold - official Cascade C9963A */
+      --pm-gold:        #C9963A;
+      --pm-gold-dk:     #A07830;
+      --pm-gold-lt:     #E8B84B;
+      --pm-gold-wash:   rgba(201,150,58,0.09);
+      --pm-gold-ring:   rgba(201,150,58,0.28);
+      --pm-gold-btn:    linear-gradient(135deg, #C9963A 0%, #E8B84B 48%, #A07830 100%);
+      --pm-gold-line:   linear-gradient(90deg, transparent, #C9963A 30%, #E8B84B 50%, #C9963A 70%, transparent);
+
+      /* Text */
+      --pm-text-primary: #1C1006;
+      --pm-text-body:    #4A3D2A;
+      --pm-text-muted:   #8C7A60;
+      --pm-text-subtle:  #B8A898;
+
+      /* Borders */
+      --pm-border: rgba(180,150,100,0.20);
+      --pm-sep:    rgba(180,150,100,0.14);
+
+      /* Category accent colors */
+      --c-store:    #2A5FA5;
+      --c-atm:      #1A7A40;
+      --c-fuel:     #A05020;
+      --c-pharmacy: #8A1A1A;
+      --c-cafe:     #6B4A2A;
+      --c-fitness:  #2A5A3A;
+      --c-resort:   #4A2A6A;
+
+      /* Typography */
+      --pm-font-display: 'Cormorant Garamond', Georgia, serif;
+      --pm-font-body:    'Raleway', system-ui, sans-serif;
+
+      /* Motion */
+      --pm-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+      --pm-ease:   cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* Radius */
+      --pm-r-sm:   10px;
+      --pm-r-md:   16px;
+      --pm-r-lg:   22px;
+      --pm-r-pill: 100px;
+
+      /* Shadows */
+      --pm-shadow-card:  0 2px 8px rgba(80,50,10,0.08), 0 6px 24px rgba(80,50,10,0.06);
+      --pm-shadow-float: 0 8px 40px rgba(28,16,6,0.18), 0 2px 8px rgba(28,16,6,0.10);
+      --pm-shadow-gold:  0 0 0 3px rgba(201,150,58,0.24);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1C1006;
+      padding: 1rem;
+      font-family: var(--pm-font-body);
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       SECTION SHELL
+       ============================================================ */
+    section.pm {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(201,150,58,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(201,150,58,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(247,242,232,0.97) 0%, rgba(251,247,238,0.99) 100%);
+      border-radius: var(--pm-r-lg);
+      overflow: hidden;
+      box-shadow: var(--pm-shadow-float);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    section.pm::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    section.pm > * { position: relative; z-index: 1; }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .pm-header {
+      padding: 2rem 1.75rem 0.5rem;
+      text-align: center;
+    }
+
+    .pm-eyebrow {
+      font-family: var(--pm-font-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--pm-gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .pm-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .pm-title {
+      font-family: var(--pm-font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--pm-text-primary);
+      line-height: 1.1;
+    }
+
+    .pm-badge {
+      background: var(--pm-gold-btn);
+      color: #fff;
+      font-family: var(--pm-font-body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.22rem 0.6rem;
+      border-radius: var(--pm-r-pill);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(201,150,58,0.35);
+    }
+
+    /* ============================================================
+       ORNAMENT
+       ============================================================ */
+    .pm-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.75rem 0.8rem;
+      gap: 0;
+    }
+
+    .pm-ornament-line {
+      height: 1px;
+      flex: 1;
+      background: var(--pm-gold-line);
+    }
+
+    .pm-ornament-diamond {
+      margin: 0 0.6rem;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       MAP WRAPPER
+       ============================================================ */
+    .pm-map-wrap {
+      position: relative;
+      margin: 0 1.25rem;
+      border-radius: var(--pm-r-md);
+      overflow: hidden;
+      box-shadow: var(--pm-shadow-card);
+      border: 1px solid var(--pm-border);
+      height: 240px;
+      background: #e8e0d0;
+    }
+
+    #poiMap {
+      width: 100%;
+      height: 100%;
+    }
+
+    .pm-map-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--pm-parchment);
+      gap: 0.6rem;
+      transition: opacity 0.4s var(--pm-ease);
+    }
+
+    .pm-map-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pm-map-loading-icon {
+      font-size: 1.6rem;
+      animation: pm-pulse 1.4s ease-in-out infinite;
+    }
+
+    .pm-map-loading-text {
+      font-family: var(--pm-font-body);
+      font-size: 0.72rem;
+      color: var(--pm-text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    @keyframes pm-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.12); opacity: 1; }
+    }
+
+    /* Auth failure overlay */
+    .pm-map-fail {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--pm-parchment);
+      padding: 1.5rem;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .pm-map-fail-icon { font-size: 2rem; }
+    .pm-map-fail-title {
+      font-family: var(--pm-font-display);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--pm-text-primary);
+    }
+    .pm-map-fail-sub {
+      font-size: 0.72rem;
+      color: var(--pm-text-muted);
+      line-height: 1.5;
+    }
+    .pm-map-fail-brand {
+      font-family: var(--pm-font-display);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--pm-gold);
+      margin-top: 0.25rem;
+    }
+
+    /* ============================================================
+       ROUTE BAR
+       ============================================================ */
+    .pm-route-bar {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 1.25rem 0;
+      padding: 0.55rem 0.9rem;
+      background: rgba(201,150,58,0.08);
+      border: 1px solid var(--pm-gold-ring);
+      border-radius: var(--pm-r-sm);
+      font-family: var(--pm-font-body);
+      font-size: 0.76rem;
+      color: var(--pm-text-body);
+      animation: pm-fadein 0.3s var(--pm-ease);
+    }
+
+    @keyframes pm-fadein {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .pm-route-mode { font-size: 1rem; flex-shrink: 0; }
+    .pm-route-info { flex: 1; }
+    .pm-route-time { font-weight: 600; color: var(--pm-text-primary); }
+    .pm-route-dist { color: var(--pm-text-muted); margin-left: 0.25rem; }
+
+    .pm-route-go {
+      background: var(--pm-gold-btn);
+      color: #fff;
+      border: none;
+      border-radius: var(--pm-r-pill);
+      font-family: var(--pm-font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(201,150,58,0.3);
+      transition: box-shadow 0.2s, transform 0.15s var(--pm-spring);
+    }
+
+    .pm-route-go:hover {
+      box-shadow: 0 4px 12px rgba(201,150,58,0.45);
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       CATEGORY FILTERS
+       ============================================================ */
+    .pm-filters {
+      padding: 0.85rem 1.25rem 0.35rem;
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .pm-filters::-webkit-scrollbar { display: none; }
+
+    .pm-filter-btn {
+      flex-shrink: 0;
+      border: 1.5px solid var(--pm-border);
+      background: rgba(255,255,255,0.6);
+      color: var(--pm-text-muted);
+      font-family: var(--pm-font-body);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--pm-r-pill);
+      cursor: pointer;
+      transition: all 0.2s var(--pm-ease);
+      white-space: nowrap;
+    }
+
+    .pm-filter-btn:hover {
+      border-color: var(--active-color, var(--pm-gold));
+      color: var(--active-color, var(--pm-gold));
+      background: rgba(255,255,255,0.85);
+    }
+
+    .pm-filter-btn.active {
+      background: var(--active-color, var(--pm-gold));
+      border-color: var(--active-color, var(--pm-gold));
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* ============================================================
+       CAROUSEL
+       ============================================================ */
+    .pm-carousel-wrap {
+      padding: 0.5rem 1.25rem 0.2rem;
+      overflow-x: auto;
+      display: flex;
+      gap: 0.75rem;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .pm-carousel-wrap::-webkit-scrollbar { display: none; }
+
+    .pm-card {
+      flex-shrink: 0;
+      width: 148px;
+      background: var(--pm-surface-2);
+      border-radius: var(--pm-r-md);
+      border: 1.5px solid var(--pm-border);
+      cursor: pointer;
+      scroll-snap-align: start;
+      transition: transform 0.25s var(--pm-spring), box-shadow 0.25s var(--pm-ease), border-color 0.2s;
+      box-shadow: var(--pm-shadow-card);
+      overflow: hidden;
+    }
+
+    .pm-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--pm-shadow-float);
+    }
+
+    .pm-card.active {
+      border-color: var(--pm-gold);
+      box-shadow: var(--pm-shadow-gold), var(--pm-shadow-float);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pm-card.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(201,150,58,0.12) 45%, transparent 100%);
+      background-size: 200% 100%;
+      animation: pm-shimmer 1.6s var(--pm-ease) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes pm-shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .pm-card-icon-wrap {
+      position: relative;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .pm-card-icon-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0.08;
+    }
+
+    .pm-card-emoji {
+      position: relative;
+      z-index: 1;
+      font-size: 1.8rem;
+    }
+
+    .pm-card-walk-badge {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      background: #1A7A40;
+      color: #fff;
+      font-family: var(--pm-font-body);
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--pm-r-pill);
+      z-index: 2;
+    }
+
+    .pm-card-body {
+      padding: 0.6rem 0.65rem 0.7rem;
+    }
+
+    .pm-card-label {
+      font-family: var(--pm-font-body);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .pm-card-name {
+      font-family: var(--pm-font-display);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--pm-text-primary);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .pm-card-dist {
+      font-family: var(--pm-font-body);
+      font-size: 0.62rem;
+      color: var(--pm-text-muted);
+    }
+
+    /* ============================================================
+       DOTS
+       ============================================================ */
+    .pm-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.5rem 0 0.3rem;
+    }
+
+    .pm-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--pm-border);
+      transition: all 0.3s var(--pm-spring);
+      cursor: pointer;
+    }
+
+    .pm-dot.active {
+      background: var(--pm-gold);
+      width: 16px;
+      border-radius: var(--pm-r-pill);
+    }
+
+    /* ============================================================
+       DETAIL PANEL
+       ============================================================ */
+    .pm-detail {
+      margin: 0.6rem 1.25rem;
+      background: var(--pm-surface-2);
+      border-radius: var(--pm-r-md);
+      border: 1.5px solid var(--pm-border);
+      overflow: hidden;
+      box-shadow: var(--pm-shadow-card);
+      animation: pm-fadein 0.3s var(--pm-ease);
+    }
+
+    .pm-d-header {
+      padding: 0.85rem 1rem 0.65rem;
+      border-bottom: 1px solid var(--pm-sep);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+
+    .pm-d-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--pm-r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .pm-d-meta { flex: 1; }
+
+    .pm-d-cat {
+      font-family: var(--pm-font-body);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .pm-d-name {
+      font-family: var(--pm-font-display);
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--pm-text-primary);
+      line-height: 1.15;
+    }
+
+    .pm-d-sub {
+      font-size: 0.7rem;
+      color: var(--pm-text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .pm-d-body { padding: 0.75rem 1rem; }
+
+    .pm-d-rows { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.7rem; }
+
+    .pm-d-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      font-size: 0.74rem;
+      color: var(--pm-text-body);
+      line-height: 1.45;
+    }
+
+    .pm-d-row-icon { flex-shrink: 0; font-size: 0.85rem; margin-top: 0.05rem; }
+
+    .pm-d-tip {
+      background: var(--pm-gold-wash);
+      border-left: 2px solid var(--pm-gold);
+      border-radius: 0 var(--pm-r-sm) var(--pm-r-sm) 0;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.73rem;
+      color: var(--pm-text-body);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .pm-d-tip strong {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--pm-gold-dk);
+      margin-bottom: 0.25rem;
+    }
+
+    .pm-d-ctas {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pm-d-cta-route {
+      flex: 1;
+      background: var(--pm-gold-btn);
+      color: #fff;
+      border: none;
+      border-radius: var(--pm-r-sm);
+      font-family: var(--pm-font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 0.55rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      box-shadow: 0 3px 10px rgba(201,150,58,0.35);
+      transition: box-shadow 0.2s, transform 0.15s var(--pm-spring);
+    }
+
+    .pm-d-cta-route:hover {
+      box-shadow: 0 5px 16px rgba(201,150,58,0.5);
+      transform: translateY(-1px);
+    }
+
+    .pm-d-cta-maps {
+      flex: 1;
+      background: transparent;
+      color: var(--pm-gold);
+      border: 1.5px solid var(--pm-gold-ring);
+      border-radius: var(--pm-r-sm);
+      font-family: var(--pm-font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 0.55rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .pm-d-cta-maps:hover {
+      background: var(--pm-gold-wash);
+      border-color: var(--pm-gold);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .pm-footer-sep {
+      height: 1px;
+      background: var(--pm-gold-line);
+      margin: 0.8rem 1.25rem 0;
+    }
+
+    .pm-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1.25rem 1rem;
+    }
+
+    .pm-footer-note {
+      font-family: var(--pm-font-body);
+      font-size: 0.64rem;
+      color: var(--pm-text-subtle);
+      letter-spacing: 0.03em;
+    }
+
+    .pm-footer-brand {
+      font-family: var(--pm-font-display);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--pm-gold);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       EMPTY STATE
+       ============================================================ */
+    .pm-empty {
+      padding: 2rem;
+      text-align: center;
+      color: var(--pm-text-muted);
+      font-size: 0.8rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<section class="pm" role="region" aria-label="Nearby Places">
+
+  <!-- HEADER -->
+  <div class="pm-header">
+    <p class="pm-eyebrow">Near Cascade Hideaway</p>
+    <div class="pm-title-row">
+      <h2 class="pm-title">What's Nearby</h2>
+      <span class="pm-badge" id="pmBadge">15 Places</span>
+    </div>
+  </div>
+
+  <!-- ORNAMENT -->
+  <div class="pm-ornament" aria-hidden="true">
+    <div class="pm-ornament-line"></div>
+    <div class="pm-ornament-diamond">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="9" y="1.5" width="9" height="9" rx="0.8" transform="rotate(45 9 9)" fill="#C9963A" fill-opacity="0.22" stroke="#C9963A" stroke-width="1.2"/>
+        <rect x="9" y="4.5" width="5" height="5" rx="0.4" transform="rotate(45 9 9)" fill="#C9963A" fill-opacity="0.55"/>
+      </svg>
+    </div>
+    <div class="pm-ornament-line"></div>
+  </div>
+
+  <!-- MAP -->
+  <div class="pm-map-wrap">
+    <div id="poiMap"></div>
+    <div class="pm-map-loading" id="pmMapLoading">
+      <span class="pm-map-loading-icon">🗺️</span>
+      <span class="pm-map-loading-text">Loading Map...</span>
+    </div>
+    <div class="pm-map-fail" id="pmMapFail">
+      <span class="pm-map-fail-icon">📍</span>
+      <p class="pm-map-fail-title">Map Unavailable</p>
+      <p class="pm-map-fail-sub">Map preview requires a valid API key.<br>All place links open in Google Maps.</p>
+      <p class="pm-map-fail-brand">Cascade Hideaway</p>
+    </div>
+  </div>
+
+  <!-- ROUTE BAR -->
+  <div class="pm-route-bar" id="pmRouteBar" role="status" aria-live="polite">
+    <span class="pm-route-mode" id="pmRouteModeIcon">🚗</span>
+    <span class="pm-route-info">
+      <span class="pm-route-time" id="pmRouteTime"></span>
+      <span class="pm-route-dist" id="pmRouteDist"></span>
+    </span>
+    <a class="pm-route-go" id="pmRouteGo" href="#" target="_blank" rel="noopener noreferrer">
+      Get Directions
+    </a>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="pm-filters" role="tablist" aria-label="Filter by category">
+    <button class="pm-filter-btn active" data-cat="all" role="tab"
+      style="--active-color: var(--pm-gold);" onclick="pmSetFilter('all', this)">
+      🗺 All
+    </button>
+    <button class="pm-filter-btn" data-cat="store" role="tab"
+      style="--active-color: var(--c-store);" onclick="pmSetFilter('store', this)">
+      🛒 Stores
+    </button>
+    <button class="pm-filter-btn" data-cat="cafe" role="tab"
+      style="--active-color: var(--c-cafe);" onclick="pmSetFilter('cafe', this)">
+      ☕ Café
+    </button>
+    <button class="pm-filter-btn" data-cat="pharmacy" role="tab"
+      style="--active-color: var(--c-pharmacy);" onclick="pmSetFilter('pharmacy', this)">
+      💊 Pharmacy
+    </button>
+    <button class="pm-filter-btn" data-cat="fuel" role="tab"
+      style="--active-color: var(--c-fuel);" onclick="pmSetFilter('fuel', this)">
+      ⛽ Fuel
+    </button>
+    <button class="pm-filter-btn" data-cat="atm" role="tab"
+      style="--active-color: var(--c-atm);" onclick="pmSetFilter('atm', this)">
+      🏧 ATM
+    </button>
+    <button class="pm-filter-btn" data-cat="fitness" role="tab"
+      style="--active-color: var(--c-fitness);" onclick="pmSetFilter('fitness', this)">
+      💪 Fitness
+    </button>
+    <button class="pm-filter-btn" data-cat="resort" role="tab"
+      style="--active-color: var(--c-resort);" onclick="pmSetFilter('resort', this)">
+      🏊 Resort
+    </button>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="pm-carousel-wrap" id="pmCarousel" role="list" aria-label="Nearby places"></div>
+  <div class="pm-empty" id="pmEmpty">No places found in this category.</div>
+
+  <!-- DOTS -->
+  <div class="pm-dots" id="pmDots" aria-hidden="true"></div>
+
+  <!-- DETAIL PANEL -->
+  <div class="pm-detail" id="pmDetail" role="region" aria-label="Place details"></div>
+
+  <!-- FOOTER -->
+  <div class="pm-footer-sep" aria-hidden="true"></div>
+  <footer class="pm-footer">
+    <span class="pm-footer-note">Tap a card to navigate</span>
+    <span class="pm-footer-brand">Cascade Hideaway</span>
+  </footer>
+
+</section>
+
+<script>
+  /* ============================================================
+     POI DATA - 15 entries, all coordinates verified
+     ============================================================ */
+  const PM = [
+    {
+      id: 1,
+      name: 'JJ Marketing',
+      sub: 'Lumina Estate',
+      cat: 'store',
+      label: 'General Store',
+      emoji: '🛒',
+      hex: '#2A5FA5',
+      lat: 6.1529973, lng: 125.1872715,
+      dist: '0.38 km', time: '~4 min', walkable: true,
+      addr: 'BLK 15 LOT 11, Lumina Estate, Conel Road',
+      hours: 'Typically daily - confirm locally',
+      note: 'Nearest general merchandise store - basic goods, snacks, drinks. Walking distance from Cascade.',
+      maps: 'https://www.google.com/maps/place/BLK15+LOT+11,+JJ+Marketing,+LUMINA+ESTATE,+General+Santos+City',
+    },
+    {
+      id: 2,
+      name: 'Square Run Store',
+      sub: 'Bria Homes',
+      cat: 'store',
+      label: 'In-Subdivision Store',
+      emoji: '🛒',
+      hex: '#2A5FA5',
+      lat: 6.1530085, lng: 125.1878090,
+      dist: '0.45 km', time: '~4 min', walkable: true,
+      addr: 'Block 22, Lot 2, Bria Homes, San Isidro (Lagao 2nd)',
+      hours: 'Typically daily - confirm locally',
+      note: 'Convenience store inside the Bria Homes subdivision. Quick run for essentials without leaving the complex.',
+      maps: 'https://www.google.com/maps/place/Block+22+Lot+2,+Square+Run+Store+Bria+Homes',
+    },
+    {
+      id: 3,
+      name: 'Coffee Project Gensan',
+      sub: 'Katangawan',
+      cat: 'cafe',
+      label: 'Specialty Coffee',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.16529, lng: 125.1959179,
+      dist: '2.27 km', time: '~5 min', walkable: false,
+      addr: 'Katangawan, General Santos City',
+      hours: 'Confirm via Facebook',
+      note: 'Part of the Coffee Project chain - reliable specialty coffee in a well-designed space. Good for a work session or a slow afternoon.',
+      maps: 'https://www.google.com/maps/place/Coffee+Project+Gensan,+Katangawan',
+    },
+    {
+      id: 4,
+      name: 'Bean Basket Garden Cafe',
+      sub: 'Rivera Farm - Nursery Road',
+      cat: 'cafe',
+      label: 'Garden Cafe',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.1382549, lng: 125.2005946,
+      dist: '3.35 km', time: '~7 min', walkable: false,
+      addr: 'Rivera Farm, V.G. Nursery Road, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Outdoor garden setting on Nursery Road - a relaxed, photogenic cafe surrounded by greenery. Popular for afternoon hangouts.',
+      maps: 'https://www.google.com/maps/place/Bean+Basket+Garden+Cafe',
+    },
+    {
+      id: 5,
+      name: 'Edsai Cafe',
+      sub: 'NLSA Road',
+      cat: 'cafe',
+      label: 'Local Cafe',
+      emoji: '☕',
+      hex: '#6B4A2A',
+      lat: 6.1298508, lng: 125.1913247,
+      dist: '3.82 km', time: '~8 min', walkable: false,
+      addr: 'NLSA Road, General Santos City',
+      hours: 'Confirm via Facebook',
+      note: 'Community-facing cafe on NLSA Road - accessible by habal-habal or tricycle. Good local coffee at everyday prices.',
+      maps: 'https://www.google.com/maps/place/Edsai+Caf%C3%A9,+NLSA+Rd',
+    },
+    {
+      id: 6,
+      name: 'BJKFITNESS Gym Equipment',
+      sub: 'Near Nursery Road',
+      cat: 'fitness',
+      label: 'Gym Supplies',
+      emoji: '💪',
+      hex: '#2A5A3A',
+      lat: 6.1439996, lng: 125.1930647,
+      dist: '1.97 km', time: '~4 min', walkable: false,
+      addr: '45VV+H6W, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Fitness equipment retailer near the Nursery Road area. Useful for resistance bands, weights, or accessories during a longer stay.',
+      maps: 'https://www.google.com/maps/place/45VV%2BH6W+BJKFITNESS+GYM+EQUIPMENT+SHOP',
+    },
+    {
+      id: 7,
+      name: 'EM-Jake Aquawave Resort',
+      sub: 'Nursery Road',
+      cat: 'resort',
+      label: 'Resort Hotel',
+      emoji: '🏊',
+      hex: '#4A2A6A',
+      lat: 6.1447567, lng: 125.1952034,
+      dist: '2.09 km', time: '~4 min', walkable: false,
+      addr: 'Nursery Road, General Santos City',
+      hours: 'Call ahead for pool hours',
+      note: 'The closest resort to Cascade Hideaway - wave pool, function rooms, and overnight accommodations. A solid day-trip option for guests wanting a swim.',
+      maps: 'https://www.google.com/maps/place/EM-Jake+Aquawave+Resort+Hotel+and+Convention+Center',
+    },
+    {
+      id: 8,
+      name: 'Gensan View Resort',
+      sub: 'Nursery Road - Purok 18',
+      cat: 'resort',
+      label: 'Resort - Leisure',
+      emoji: '🏖️',
+      hex: '#4A2A6A',
+      lat: 6.1489675, lng: 125.2022415,
+      dist: '2.67 km', time: '~6 min', walkable: false,
+      addr: 'Nursery Road, Purok 18, General Santos City',
+      hours: 'Open daily - confirm hours',
+      note: 'Scenic resort on the Nursery Road strip - popular with local families. Good for an afternoon swim or weekend leisure.',
+      maps: 'https://www.google.com/maps/place/Gensan+View+Resort',
+    },
+    {
+      id: 9,
+      name: "Mix N' Magic Conel Branch",
+      sub: 'Conel-Olympog Road',
+      cat: 'store',
+      label: 'Party Supplies - Sari-Sari',
+      emoji: '🎉',
+      hex: '#2A5FA5',
+      lat: 6.1368353, lng: 125.1888476,
+      dist: '2.71 km', time: '~6 min', walkable: false,
+      addr: 'Conel-Olympog Rd, General Santos City',
+      hours: 'Confirm before visiting',
+      note: 'Party supplies, novelties, and general merchandise along the main Conel Road corridor. Useful for event prep or grab-and-go items.',
+      maps: "https://www.google.com/maps/place/Mix+N'+Magic+Conel+Branch",
+    },
+    {
+      id: 10,
+      name: 'Brigada Pharmacy',
+      sub: 'Sunrise Lagao',
+      cat: 'pharmacy',
+      label: 'Pharmacy',
+      emoji: '💊',
+      hex: '#8A1A1A',
+      lat: 6.1318388, lng: 125.1882054,
+      dist: '3.44 km', time: '~7 min', walkable: false,
+      addr: '45JQ+P7P, General Santos City',
+      hours: 'Daily - hours may vary',
+      note: 'Nearest verified pharmacy south of Cascade along the NLSA-Conel corridor. Stock up on essentials, OTC meds, and first aid.',
+      maps: 'https://www.google.com/maps/place/45JQ%2BP7P+Brigada+Pharmacy+Sunrise+Lagao',
+    },
+    {
+      id: 11,
+      name: 'Riavin Peoples Petroleum',
+      sub: 'Conel Road - Closest',
+      cat: 'fuel',
+      label: 'Gas Station',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.147021, lng: 125.1889489,
+      dist: '1.3 km', time: '~3 min', walkable: false,
+      addr: 'Conel-Olympog Rd, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Closest fuel station to Cascade Hideaway - right on Conel Road, the same route guests take going in or out of the subdivision.',
+      maps: 'https://www.google.com/maps/place/RIAVIN+PEOPLES+PETROLEUM+CORP.+CONEL+ROAD/@6.147021,125.1889489',
+    },
+    {
+      id: 12,
+      name: 'Riavin',
+      sub: 'Katangawan',
+      cat: 'fuel',
+      label: 'Gas Station',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.1653633, lng: 125.1915207,
+      dist: '1.9 km', time: '~4 min', walkable: false,
+      addr: 'Katangawan, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Second Riavin station slightly north - useful on the way toward Katangawan or Coffee Project. Alternative if the Conel branch is busy.',
+      maps: 'https://www.google.com/maps/place/Riavin/@6.1653633,125.1915207',
+    },
+    {
+      id: 13,
+      name: 'Petron NLSA Road',
+      sub: 'NLSA Road - Brgy. San Isidro',
+      cat: 'fuel',
+      label: 'Gas Station - GCash/PayMaya',
+      emoji: '⛽',
+      hex: '#A05020',
+      lat: 6.136001, lng: 125.189423,
+      dist: '2.50 km', time: '~5 min', walkable: false,
+      addr: 'NLSA Road cor. Conel-Olympog Rd, General Santos City',
+      hours: 'Typically 24/7',
+      note: 'Petron station at the NLSA Road-Conel intersection - has PayMaya/GCash top-up. The station most tricycle drivers use as a city-side landmark.',
+      maps: 'https://www.google.com/maps?q=6.136001,125.189423',
+    },
+    {
+      id: 14,
+      name: 'BDO ATM - Lagao',
+      sub: 'J. Catolico Sr. Ave.',
+      cat: 'atm',
+      label: 'Bank - ATM',
+      emoji: '🏦',
+      hex: '#1A7A40',
+      lat: 6.127801, lng: 125.195605,
+      dist: '3.80 km', time: '~8 min', walkable: false,
+      addr: 'BDO Network Bank, Jose Catolico Sr. Ave., Lagao, General Santos City',
+      hours: '24/7 ATM Access',
+      note: 'Reliable BDO branch on the main Lagao commercial strip. Tricycle from Bria gate drops you close to the entrance.',
+      maps: 'https://www.google.com/maps?q=6.127801,125.195605',
+    },
+    {
+      id: 15,
+      name: 'Metrobank ATM - Lagao',
+      sub: 'Gaisano Mall',
+      cat: 'atm',
+      label: 'Bank - ATM',
+      emoji: '💳',
+      hex: '#1A7A40',
+      lat: 6.124110, lng: 125.187640,
+      dist: '4.10 km', time: '~9 min', walkable: false,
+      addr: 'Gaisano Mall of GenSan, J. Catolico Ave., Lagao, General Santos City',
+      hours: 'Mall hours (10AM-9PM)',
+      note: 'Metrobank ATM inside Gaisano Mall. Preferred for large withdrawals during mall hours - well-lit and supervised.',
+      maps: 'https://www.google.com/maps?q=6.124110,125.187640',
+    },
+  ];
+
+  /* ============================================================
+     CONSTANTS & STATE
+     ============================================================ */
+  const ORIGIN = { lat: 6.1545469, lng: 125.1852321 };
+
+  let poiMap = null;
+  let directionsService = null;
+  let directionsRenderer = null;
+  let poiMarkers = [];
+  let destMarker = null;
+
+  let pmActiveFilter = 'all';
+  let pmFilteredData = [...PM];
+  let pmActiveIndex = 0;
+
+  /* ============================================================
+     UTILITY: Haversine distance in metres
+     ============================================================ */
+  function haversineM(lat1, lng1, lat2, lng2) {
+    const R = 6371000;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2
+            + Math.cos(lat1 * Math.PI / 180)
+            * Math.cos(lat2 * Math.PI / 180)
+            * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  /* ============================================================
+     HOME PIN
+     ============================================================ */
+  function pmHomeIcon() {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+      <defs>
+        <filter id="hs"><feDropShadow dx="0" dy="2" stdDeviation="2"
+          flood-color="rgba(0,0,0,0.35)"/></filter>
+      </defs>
+      <path d="M18,42 C16,38 4,28 4,18 A14,14 0 1 1 32,18 C32,28 20,38 18,42Z"
+        fill="#C9963A" stroke="#ffffff" stroke-width="2.5" filter="url(#hs)"/>
+      <text x="18" y="22" text-anchor="middle" font-size="13"
+        font-family="Arial,sans-serif">🏠</text>
+    </svg>`;
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(36, 44),
+      anchor: new google.maps.Point(18, 43),
+    };
+  }
+
+  /* Destination marker icon */
+  function pmDestIcon(r) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="42" viewBox="0 0 34 42">
+      <defs>
+        <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2"
+          flood-color="rgba(0,0,0,0.3)"/></filter>
+      </defs>
+      <path d="M17,40 C15,36 3,26 3,17 A14,14 0 1 1 31,17 C31,26 19,36 17,40Z"
+        fill="${r.hex}" stroke="#ffffff" stroke-width="2" filter="url(#ds)"/>
+      <text x="17" y="21" text-anchor="middle" font-size="12"
+        font-family="Arial,sans-serif">${r.emoji}</text>
+    </svg>`;
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(34, 42),
+      anchor: new google.maps.Point(17, 41),
+    };
+  }
+
+  /* ============================================================
+     MAPS INIT CALLBACK
+     ============================================================ */
+  window.initPoiMap = function () {
+    const mapStyles = [
+      { elementType: 'geometry', stylers: [{ color: '#f5efe0' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#4a3d2a' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#faf5e8' }] },
+      { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#b8d4e8' }] },
+      { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#e8dfc4' }] },
+      { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#d4c49a' }] },
+      { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#ddd5bc' }] },
+      { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#c8d8b4' }] },
+      { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+    ];
+
+    poiMap = new google.maps.Map(document.getElementById('poiMap'), {
+      center: ORIGIN,
+      zoom: 16,
+      styles: mapStyles,
+      disableDefaultUI: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      clickableIcons: false,
+      gestureHandling: 'cooperative',
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: '#C9963A',
+        strokeWeight: 4,
+        strokeOpacity: 0.85,
+      },
+    });
+    directionsRenderer.setMap(poiMap);
+
+    /* Home marker - always visible */
+    new google.maps.Marker({
+      position: ORIGIN,
+      map: poiMap,
+      icon: pmHomeIcon(),
+      title: 'Cascade Hideaway',
+      zIndex: 9999,
+    });
+
+    poiMap.addListenerOnce('idle', () => {
+      document.getElementById('pmMapLoading').classList.add('hidden');
+    });
+
+    /* Route to the currently active place if set */
+    const active = pmFilteredData[pmActiveIndex];
+    if (active) pmRouteToActive(active);
+  };
+
+  /* ============================================================
+     AUTH FAILURE FALLBACK
+     ============================================================ */
+  window.gm_authFailure = function () {
+    document.getElementById('pmMapLoading').style.display = 'none';
+    document.getElementById('pmMapFail').style.display = 'flex';
+    document.getElementById('pmRouteBar').style.display = 'none';
+  };
+
+  /* ============================================================
+     ROUTE LOGIC
+     ============================================================ */
+  function pmRouteToActive(r) {
+    if (!directionsService || !poiMap) return;
+
+    const isWalkable = haversineM(ORIGIN.lat, ORIGIN.lng, r.lat, r.lng) <= 600;
+
+    directionsService.route(
+      {
+        origin: ORIGIN,
+        destination: { lat: r.lat, lng: r.lng },
+        travelMode: isWalkable
+          ? google.maps.TravelMode.WALKING
+          : google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === 'OK') {
+          directionsRenderer.setDirections(result);
+          pmPlaceDestMarker(r);
+          const leg = result.routes[0].legs[0];
+          pmUpdateRouteBar(leg.distance.text, leg.duration.text, isWalkable, r);
+        } else {
+          /* Fallback: pan to destination, show static data */
+          directionsRenderer.setDirections({ routes: [] });
+          poiMap.panTo({ lat: r.lat, lng: r.lng });
+          pmPlaceDestMarker(r);
+          pmUpdateRouteBar(r.dist, r.time + ' drive', r.walkable, r);
+        }
+      }
+    );
+  }
+
+  function pmPlaceDestMarker(r) {
+    if (destMarker) destMarker.setMap(null);
+    destMarker = new google.maps.Marker({
+      position: { lat: r.lat, lng: r.lng },
+      map: poiMap,
+      icon: pmDestIcon(r),
+      title: r.name,
+      zIndex: 100,
+    });
+  }
+
+  function pmUpdateRouteBar(dist, time, isWalk, r) {
+    const bar = document.getElementById('pmRouteBar');
+    bar.style.display = 'flex';
+    document.getElementById('pmRouteModeIcon').textContent = isWalk ? '🚶' : '🚗';
+    document.getElementById('pmRouteTime').textContent = time + '  ';
+    document.getElementById('pmRouteDist').textContent = dist;
+    const go = document.getElementById('pmRouteGo');
+    go.href = `https://www.google.com/maps/dir/${ORIGIN.lat},${ORIGIN.lng}/${r.lat},${r.lng}`;
+  }
+
+  function pmClearRoute() {
+    if (directionsRenderer) directionsRenderer.setDirections({ routes: [] });
+    if (destMarker) { destMarker.setMap(null); destMarker = null; }
+    document.getElementById('pmRouteBar').style.display = 'none';
+  }
+
+  /* ============================================================
+     FILTER
+     ============================================================ */
+  function pmSetFilter(cat, btn) {
+    pmActiveFilter = cat;
+
+    /* Update button states */
+    document.querySelectorAll('.pm-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    /* Filter data */
+    pmFilteredData = cat === 'all' ? [...PM] : PM.filter(r => r.cat === cat);
+    pmActiveIndex = 0;
+
+    pmClearRoute();
+    pmRenderAll();
+  }
+
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  function pmRenderAll() {
+    pmRenderCarousel();
+    pmRenderDots();
+    if (pmFilteredData.length > 0) {
+      pmActivate(0, false);
+    } else {
+      document.getElementById('pmDetail').innerHTML = '';
+      document.getElementById('pmEmpty').style.display = 'block';
+    }
+    document.getElementById('pmBadge').textContent =
+      pmFilteredData.length + (pmActiveFilter === 'all' ? ' Places' : ' Found');
+  }
+
+  function pmRenderCarousel() {
+    const wrap = document.getElementById('pmCarousel');
+    const empty = document.getElementById('pmEmpty');
+
+    if (pmFilteredData.length === 0) {
+      wrap.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    wrap.innerHTML = pmFilteredData.map((r, i) => {
+      const modeIcon = r.walkable ? '🚶' : '🚗';
+      const walkBadge = r.walkable
+        ? `<span class="pm-card-walk-badge">🚶 Walk</span>`
+        : '';
+
+      return `
+        <div class="pm-card" role="listitem" data-index="${i}"
+          onclick="pmActivate(${i}, true)"
+          aria-label="${r.name}, ${r.label}, ${r.dist}"
+          aria-selected="false" id="pmCard${i}">
+          <div class="pm-card-icon-wrap">
+            <div class="pm-card-icon-bg" style="background: ${r.hex};"></div>
+            <span class="pm-card-emoji">${r.emoji}</span>
+            ${walkBadge}
+          </div>
+          <div class="pm-card-body">
+            <div class="pm-card-label" style="color: ${r.hex};">${r.label}</div>
+            <div class="pm-card-name">${r.name}</div>
+            <div class="pm-card-dist">📍 ${r.dist} · ${modeIcon} ${r.time}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function pmRenderDots() {
+    const wrap = document.getElementById('pmDots');
+    if (pmFilteredData.length <= 1) { wrap.innerHTML = ''; return; }
+    wrap.innerHTML = pmFilteredData.map((_, i) =>
+      `<div class="pm-dot${i === pmActiveIndex ? ' active' : ''}"
+        onclick="pmScrollToCard(${i})" aria-label="Place ${i + 1}"></div>`
+    ).join('');
+  }
+
+  /* ============================================================
+     ACTIVATE
+     ============================================================ */
+  function pmActivate(i, animate) {
+    pmActiveIndex = i;
+    const r = pmFilteredData[i];
+
+    /* Cards */
+    document.querySelectorAll('.pm-card').forEach((el, idx) => {
+      el.classList.toggle('active', idx === i);
+      el.setAttribute('aria-selected', idx === i ? 'true' : 'false');
+    });
+
+    /* Dots */
+    document.querySelectorAll('.pm-dot').forEach((el, idx) =>
+      el.classList.toggle('active', idx === i));
+
+    /* Route */
+    if (poiMap && directionsService) {
+      pmRouteToActive(r);
+    }
+
+    /* Detail */
+    pmRenderDetail(r, i);
+
+    /* Scroll card into view */
+    if (animate) pmScrollToCard(i);
+  }
+
+  function pmScrollToCard(i) {
+    const card = document.getElementById('pmCard' + i);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    pmRenderDots();
+    /* Sync dots after scroll */
+    setTimeout(() => {
+      document.querySelectorAll('.pm-dot').forEach((el, idx) =>
+        el.classList.toggle('active', idx === i));
+    }, 50);
+  }
+
+  /* ============================================================
+     DETAIL PANEL
+     ============================================================ */
+  function pmRenderDetail(r, i) {
+    const modeIcon = r.walkable ? '🚶' : '🚗';
+    const modeLabel = r.walkable ? 'walking distance' : 'from Cascade Hideaway';
+    const travelLabel = r.walkable
+      ? `${r.dist} from Cascade · ${r.time} walk`
+      : `${r.dist} from Cascade Hideaway · ${r.time} drive`;
+
+    document.getElementById('pmDetail').innerHTML = `
+      <div class="pm-d-header">
+        <div class="pm-d-icon" style="background: ${r.hex}18;">
+          <span style="font-size: 1.4rem;">${r.emoji}</span>
+        </div>
+        <div class="pm-d-meta">
+          <div class="pm-d-cat" style="color: ${r.hex};">${r.label}</div>
+          <div class="pm-d-name">${r.name}</div>
+          <div class="pm-d-sub">${r.sub}</div>
+        </div>
+      </div>
+      <div class="pm-d-body">
+        <div class="pm-d-rows">
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">📍</span>
+            <span>${r.addr}</span>
+          </div>
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">🕐</span>
+            <span>${r.hours}</span>
+          </div>
+          <div class="pm-d-row">
+            <span class="pm-d-row-icon">${modeIcon}</span>
+            <span>${travelLabel}</span>
+          </div>
+        </div>
+        <div class="pm-d-tip">
+          <strong>Local Tip</strong>
+          ${r.note}
+        </div>
+        <div class="pm-d-ctas">
+          <button class="pm-d-cta-route" onclick="pmActivate(${i}, false)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12h18M13 5l7 7-7 7"/>
+            </svg>
+            Show Route
+          </button>
+          <a class="pm-d-cta-maps" href="${r.maps}" target="_blank" rel="noopener noreferrer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Open Maps
+          </a>
+        </div>
+      </div>`;
+  }
+
+  /* ============================================================
+     BOOT - carousel renders on DOMContentLoaded, no Maps dependency
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', () => {
+    pmFilteredData = [...PM];
+    pmRenderAll();
+  });
+</script>
+
+<!-- Google Maps API - replace YOUR_GOOGLE_MAPS_API_KEY with the production key -->
+<script
+  async defer
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initPoiMap&loading=async">
+</script>
+
+</body>
+</html>
