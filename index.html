@@ -385,7 +385,7 @@ section.pm > * { position: relative; z-index: 1; }
 .pm-route-show:hover { background: rgba(20,89,94,0.14); }
 .pm-route-show:active { transform: scale(0.97); }
 .pm-route-show:disabled { opacity: 0.55; cursor: not-allowed; }
-.pm-route-go, .pm-route-waze {
+.pm-route-go {
   flex: 1;
   border: none;
   border-radius: var(--pm-r-pill);
@@ -404,187 +404,55 @@ section.pm > * { position: relative; z-index: 1; }
   box-shadow: 0 2px 8px rgba(20,89,94,0.28);
 }
 .pm-route-go:hover { box-shadow: 0 4px 14px rgba(20,89,94,0.44); transform: translateY(-1px); }
-.pm-route-waze {
-  background: linear-gradient(135deg,#33D1E8 0%,#00A8CC 100%);
-  color: #003049;
-  box-shadow: 0 2px 8px rgba(0,168,204,0.22);
-}
-.pm-route-waze:hover { box-shadow: 0 4px 14px rgba(0,168,204,0.38); transform: translateY(-1px); }
 
 
 /* ════════════════════════════════════════════════════════════════════
-   CATEGORY DROPDOWN — custom animated, no system dialog
+   CATEGORY PILLS — horizontal scroll row
 ════════════════════════════════════════════════════════════════════ */
-.pm-cat-wrap {
-  position: relative;
-  margin: 0.85rem 1rem 0;
+.pm-filters {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  z-index: 20;
+  gap: 0.45rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.75rem 1rem 0.55rem;
 }
-.pm-cat-label {
-  font-family: var(--pm-font-body);
-  font-size: 0.63rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--pm-text-muted);
+.pm-filters::-webkit-scrollbar { display: none; }
+
+.pm-filter-btn {
   flex-shrink: 0;
-}
-.pm-cat-trigger {
-  flex: 1;
-  display: flex;
+  scroll-snap-align: start;
+  display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  background: var(--pm-surface-2);
+  gap: 0.3rem;
+  background: rgba(255,255,255,0.88);
+  color: var(--pm-text-body);
   border: 1.5px solid var(--pm-border);
   border-radius: var(--pm-r-pill);
-  padding: 0.48rem 0.85rem;
   font-family: var(--pm-font-body);
-  font-size: 0.76rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  color: var(--pm-text-primary);
+  letter-spacing: 0.02em;
+  padding: 0.36rem 0.85rem;
   cursor: pointer;
-  min-height: 40px;
-  box-shadow: 0 1px 4px rgba(80,50,10,0.06);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
-  -webkit-tap-highlight-color: transparent;
-  text-align: left;
-}
-.pm-cat-trigger.open {
-  border-color: var(--pm-accent);
-  box-shadow: 0 0 0 3px rgba(20,89,94,0.10);
-  border-radius: calc(var(--pm-r-pill) * 0.7) calc(var(--pm-r-pill) * 0.7) 0 0;
-  border-bottom-color: transparent;
-}
-.pm-cat-trigger-text { flex: 1; }
-.pm-cat-chevron {
-  transition: transform 260ms var(--pm-ease);
-  flex-shrink: 0;
-  color: var(--pm-accent);
-}
-.pm-cat-trigger.open .pm-cat-chevron { transform: rotate(180deg); }
-/* dropdown menu */
-.pm-cat-menu {
-  position: absolute;
-  top: calc(100% - 1px);
-  left: calc(0.55rem + 2.8rem); /* align under trigger */
-  right: 0;
-  background: var(--pm-surface-2);
-  border: 1.5px solid var(--pm-accent);
-  border-top: none;
-  border-radius: 0 0 14px 14px;
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 280ms cubic-bezier(0.4,0,0.2,1),
-              opacity    180ms ease;
-  box-shadow: 0 8px 24px rgba(20,89,94,0.14);
-}
-.pm-cat-menu.open {
-  max-height: 360px;
-  opacity: 1;
-}
-.pm-cat-opt {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.6rem 1.1rem;
-  font-family: var(--pm-font-body);
-  font-size: 0.76rem;
-  font-weight: 500;
-  color: var(--pm-text-body);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  transition: background 150ms ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.pm-cat-opt:hover, .pm-cat-opt:focus { background: var(--pm-accent-wash); }
-.pm-cat-opt.active {
-  color: var(--pm-accent);
-  font-weight: 700;
-}
-.pm-cat-opt-count {
-  font-size: 0.65rem;
-  color: var(--pm-text-muted);
-  background: rgba(180,150,100,0.12);
-  border-radius: 20px;
-  padding: 0.1rem 0.5rem;
-  margin-left: 0.5rem;
-}
-.pm-cat-opt-sep {
-  height: 1px;
-  background: var(--pm-sep);
-  margin: 0 1.1rem;
-}
-/* hide old pills */
-.pm-filters { display: none; }
-.pm-filter-btn { display: none; }
-
-/* ════════════════════════════════════════════════════════════════════
-   STREET VIEW — thumbnail + panorama panel
-════════════════════════════════════════════════════════════════════ */
-.pm-sv-thumb {
-  margin: 0 0 0.8rem;
-  border-radius: var(--pm-r-sm);
-  overflow: hidden;
-  height: 120px;
-  background: var(--pm-border);
-  position: relative;
-}
-.pm-sv-thumb img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: opacity 300ms ease;
-}
-.pm-sv-thumb-label {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 0.25rem 0.6rem;
-  background: linear-gradient(transparent, rgba(20,20,20,0.55));
-  font-family: var(--pm-font-body);
-  font-size: 0.58rem;
-  color: rgba(255,255,255,0.85);
-  letter-spacing: 0.05em;
-}
-/* street view panorama panel below route bar */
-.pm-sv-pano-wrap {
-  margin: 0.5rem 1rem 0;
-  border-radius: var(--pm-r-md);
-  overflow: hidden;
-  height: 0;
-  opacity: 0;
-  transition: height 320ms cubic-bezier(0.4,0,0.2,1), opacity 240ms ease;
-  border: 1px solid var(--pm-border);
-}
-.pm-sv-pano-wrap.open {
-  height: 200px;
-  opacity: 1;
-}
-#pmSvPano { width: 100%; height: 100%; }
-.pm-sv-btn {
-  flex-shrink: 0;
-  display: none; /* shown only for walkable places */
-  align-items: center;
-  gap: 0.28rem;
-  background: rgba(255,255,255,0.90);
-  color: var(--pm-text-body);
-  border: 1.5px solid var(--pm-border);
-  border-radius: var(--pm-r-pill);
-  font-family: var(--pm-font-body);
-  font-size: 0.67rem; font-weight: 600; letter-spacing: 0.04em;
-  padding: 0.3rem 0.68rem;
-  cursor: pointer; white-space: nowrap;
+  white-space: nowrap;
+  min-height: 34px;
+  box-shadow: 0 1px 3px rgba(80,50,10,0.06);
   transition: all 200ms var(--pm-ease);
   -webkit-tap-highlight-color: transparent;
 }
-.pm-sv-btn.walkable { display: inline-flex; }
-.pm-sv-btn.active { background: var(--pm-accent-wash); border-color: var(--pm-accent); color: var(--pm-accent); }
+.pm-filter-btn:hover { border-color: var(--pm-accent); background: var(--pm-accent-wash); }
+.pm-filter-btn:active { transform: scale(0.96); }
+.pm-filter-btn.active {
+  background: var(--pm-accent-btn);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(20,89,94,0.30);
+}
+
+/* hide old dropdown */
+.pm-cat-wrap { display: none; }
 
 /* ════════════════════════════════════════════════════════════════════
    CAROUSEL
@@ -1146,7 +1014,7 @@ section.pm > * { position: relative; z-index: 1; }
     </div>
   </div>
 
-  <!-- ROUTE BAR — two rows: info+Show Route / Google Maps+Waze -->
+  <!-- ROUTE BAR — single row: mode · time/dist · Show Route · Google Maps -->
   <div class="pm-route-bar" id="pmRouteBar" role="status" aria-live="polite">
     <div class="pm-route-bar-top">
       <span class="pm-route-mode" id="pmRouteModeIcon">🚗</span>
@@ -1163,59 +1031,27 @@ section.pm > * { position: relative; z-index: 1; }
         </svg>
         Show Route
       </button>
-      <button class="pm-sv-btn" id="pmSvBtn"
-        onclick="pmToggleStreetView()"
-        aria-label="Street view">
-        👁
-      </button>
-    </div>
-    <div class="pm-route-bar-nav">
       <a class="pm-route-go" id="pmRouteGo" href="#" target="_blank" rel="noopener noreferrer">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polygon points="3 11 22 2 13 21 11 13 3 11"/>
         </svg>
-        Google Maps
-      </a>
-      <a class="pm-route-waze" id="pmRouteWaze" href="#" target="_blank" rel="noopener noreferrer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M20.54 7.28A9.47 9.47 0 0 0 12 2C6.48 2 2 6.48 2 12c0 1.96.57 3.78 1.55 5.32L2 22l4.91-1.48A9.94 9.94 0 0 0 12 22a9.47 9.47 0 0 0 9.54-7.28A9.5 9.5 0 0 0 20.54 7.28z"/>
-        </svg>
-        Waze
+        Maps
       </a>
     </div>
   </div>
 
-  <!-- STREET VIEW PANORAMA — slides open below route bar for walkable places -->
-  <div class="pm-sv-pano-wrap" id="pmSvPanoWrap">
-    <div id="pmSvPano"></div>
-  </div>
-
-  <!-- CATEGORY DROPDOWN — custom animated, no system dialog -->
-  <div class="pm-cat-wrap" id="pmCatWrap">
-    <span class="pm-cat-label">Category</span>
-    <button class="pm-cat-trigger" id="pmCatTrigger"
-      onclick="pmToggleDrop(event)"
-      aria-haspopup="listbox" aria-expanded="false" aria-controls="pmCatMenu">
-      <span class="pm-cat-trigger-text" id="pmCatLabel">🗺️  All Places</span>
-      <svg class="pm-cat-chevron" width="14" height="14" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-        aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <div class="pm-cat-menu" id="pmCatMenu" role="listbox"></div>
-  </div>
-
-  <!-- Old pills — kept for any legacy references; hidden by CSS -->
-  <div class="pm-filters" aria-hidden="true">
-    <button class="pm-filter-btn active" data-cat="all">All</button>
-    <button class="pm-filter-btn" data-cat="store">Stores</button>
-    <button class="pm-filter-btn" data-cat="food">Food</button>
-    <button class="pm-filter-btn" data-cat="cafe">Café</button>
-    <button class="pm-filter-btn" data-cat="atm">ATM</button>
-    <button class="pm-filter-btn" data-cat="pharmacy">Pharmacy</button>
-    <button class="pm-filter-btn" data-cat="fuel">Fuel</button>
-    <button class="pm-filter-btn" data-cat="fitness">Fitness</button>
-    <button class="pm-filter-btn" data-cat="resort">Resort</button>
+  <!-- CATEGORY PILLS -->
+  <div class="pm-filters" id="pmFilters" role="group" aria-label="Filter by category">
+    <button class="pm-filter-btn active" data-cat="all" onclick="pmPillFilter('all')">🗺️ All</button>
+    <button class="pm-filter-btn" data-cat="store" onclick="pmPillFilter('store')">🛒 Stores</button>
+    <button class="pm-filter-btn" data-cat="food" onclick="pmPillFilter('food')">🍜 Food</button>
+    <button class="pm-filter-btn" data-cat="cafe" onclick="pmPillFilter('cafe')">☕ Café</button>
+    <button class="pm-filter-btn" data-cat="atm" onclick="pmPillFilter('atm')">🏧 ATM</button>
+    <button class="pm-filter-btn" data-cat="pharmacy" onclick="pmPillFilter('pharmacy')">💊 Pharmacy</button>
+    <button class="pm-filter-btn" data-cat="fuel" onclick="pmPillFilter('fuel')">⛽ Fuel</button>
+    <button class="pm-filter-btn" data-cat="fitness" onclick="pmPillFilter('fitness')">🏋️ Fitness</button>
+    <button class="pm-filter-btn" data-cat="resort" onclick="pmPillFilter('resort')">🏖️ Resort</button>
   </div>
 
   <!-- CAROUSEL -->
@@ -1672,7 +1508,7 @@ section.pm > * { position: relative; z-index: 1; }
       streetViewControl: false,
       fullscreenControl: false,
       clickableIcons: false,
-      gestureHandling: 'cooperative',
+      gestureHandling: 'none',   /* was 'cooperative' — prevents passive-event cancellation errors */
     });
 
     /* ── Idle listener registered FIRST — spinner always dismissed ── */
@@ -1729,8 +1565,6 @@ section.pm > * { position: relative; z-index: 1; }
     document.getElementById('pmRouteDist').textContent = dist;
     const goEl = document.getElementById('pmRouteGo');
     if (goEl) goEl.href = `https://www.google.com/maps/dir/${ORIGIN.lat},${ORIGIN.lng}/${r.lat},${r.lng}`;
-    const wazeEl = document.getElementById('pmRouteWaze');
-    if (wazeEl) wazeEl.href = `https://www.waze.com/ul?ll=${r.lat},${r.lng}&navigate=yes`;
   }
 
   function pmClearRoute() {
@@ -1805,8 +1639,6 @@ section.pm > * { position: relative; z-index: 1; }
         document.getElementById('pmRouteDist').textContent = distM >= 1000 ? (distM / 1000).toFixed(1) + ' km' : (distM > 0 ? distM + ' m' : r.dist);
         const goEl = document.getElementById('pmRouteGo');
         if (goEl) goEl.href = 'https://www.google.com/maps/dir/' + ORIGIN.lat + ',' + ORIGIN.lng + '/' + r.lat + ',' + r.lng;
-        const wazeEl = document.getElementById('pmRouteWaze');
-        if (wazeEl) wazeEl.href = 'https://www.waze.com/ul?ll=' + r.lat + ',' + r.lng + '&navigate=yes';
       } else {
         throw new Error('no route');
       }
@@ -1837,12 +1669,11 @@ section.pm > * { position: relative; z-index: 1; }
     pmFilteredData = cat === 'all' ? [...PM] : PM.filter(r => r.cat === cat);
     pmActiveIndex = 0;
     pmClearRoute();
-    pmCloseSvPane();
     pmRenderAll();
   }
 
   /* ══════════════════════════════════════════════════════════════════
-     DROPDOWN — custom animated category selector
+     CATEGORY METADATA
   ══════════════════════════════════════════════════════════════════ */
   const CAT_META = {
     all:      { emoji:'🗺️',  label:'All Places'  },
@@ -1856,144 +1687,14 @@ section.pm > * { position: relative; z-index: 1; }
     resort:   { emoji:'🏊', label:'Resorts'      },
   };
 
-  function pmBuildDropdown() {
-    const menu = document.getElementById('pmCatMenu');
-    if (!menu) return;
-    /* compute counts */
-    const counts = { all: PM.length };
-    PM.forEach(r => { counts[r.cat] = (counts[r.cat] || 0) + 1; });
-    let html = '';
-    Object.keys(CAT_META).forEach((cat, idx) => {
-      const m = CAT_META[cat];
-      const cnt = counts[cat] || 0;
-      if (cat !== 'all' && cnt === 0) return; /* hide empty categories */
-      if (idx === 1) html += '<div class="pm-cat-opt-sep"></div>';
-      html += `<button class="pm-cat-opt${cat === 'all' ? ' active' : ''}"
-        data-cat="${cat}" role="option"
-        onclick="pmPickCat('${cat}')">${m.emoji}  ${m.label}
-        <span class="pm-cat-opt-count">${cnt}</span>
-      </button>`;
-    });
-    menu.innerHTML = html;
-  }
-
-  function pmToggleDrop(e) {
-    if (e) e.stopPropagation();
-    const trigger = document.getElementById('pmCatTrigger');
-    const menu    = document.getElementById('pmCatMenu');
-    const isOpen  = menu.classList.contains('open');
-    if (isOpen) {
-      pmCloseDrop();
-    } else {
-      trigger.classList.add('open');
-      trigger.setAttribute('aria-expanded','true');
-      menu.classList.add('open');
-    }
-  }
-
-  function pmCloseDrop() {
-    const trigger = document.getElementById('pmCatTrigger');
-    const menu    = document.getElementById('pmCatMenu');
-    trigger.classList.remove('open');
-    trigger.setAttribute('aria-expanded','false');
-    menu.classList.remove('open');
-  }
-
-  function pmPickCat(cat) {
-    pmCloseDrop();
-    const m = CAT_META[cat] || CAT_META.all;
-    /* update trigger label */
-    const lbl = document.getElementById('pmCatLabel');
-    if (lbl) lbl.textContent = m.emoji + '  ' + m.label;
-    /* update active state in menu */
-    document.querySelectorAll('.pm-cat-opt').forEach(o => {
-      o.classList.toggle('active', o.dataset.cat === cat);
+  /* ══════════════════════════════════════════════════════════════════
+     PILL FILTER — tap to filter by category
+  ══════════════════════════════════════════════════════════════════ */
+  function pmPillFilter(cat) {
+    document.querySelectorAll('.pm-filter-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.cat === cat);
     });
     pmSetFilter(cat);
-  }
-
-  /* Close dropdown when clicking outside */
-  document.addEventListener('click', function(e) {
-    const wrap = document.getElementById('pmCatWrap');
-    if (wrap && !wrap.contains(e.target)) pmCloseDrop();
-  });
-
-  /* ══════════════════════════════════════════════════════════════════
-     STREET VIEW — Static thumbnail + embedded panorama
-  ══════════════════════════════════════════════════════════════════ */
-  const SV_KEY = 'AIzaSyBEu5qN1QXT1Zt0nSdMnMNhsZH2CcKDvaM';
-  let svPanoInstance = null;
-  let svPanoOpen = false;
-
-  function pmBearing(from, to) {
-    const lat1 = from.lat * Math.PI / 180, lat2 = to.lat * Math.PI / 180;
-    const dLng = (to.lng - from.lng) * Math.PI / 180;
-    const y = Math.sin(dLng) * Math.cos(lat2);
-    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
-    return ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360;
-  }
-
-  function pmLoadSvThumb(r) {
-    const wrap = document.getElementById('pmSvThumbWrap');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    /* Metadata check first (free SKU — no charge if no imagery) */
-    const metaUrl = `https://maps.googleapis.com/maps/api/streetview/metadata?location=${r.lat},${r.lng}&radius=50&key=${SV_KEY}`;
-    fetch(metaUrl)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== 'OK') return; /* no imagery nearby — stay empty */
-        const heading = Math.round(pmBearing(r, ORIGIN)); /* face toward property */
-        const imgUrl  = `https://maps.googleapis.com/maps/api/streetview?size=400x120&location=${r.lat},${r.lng}&heading=${heading}&pitch=5&fov=80&key=${SV_KEY}`;
-        wrap.innerHTML = `
-          <div class="pm-sv-thumb">
-            <img src="${imgUrl}" alt="Street view near ${r.name}" loading="lazy"
-              onerror="this.parentElement.style.display='none'">
-            <div class="pm-sv-thumb-label">📍 Street view near ${r.name}</div>
-          </div>`;
-      })
-      .catch(() => {}); /* silent fail — thumbnail is additive */
-  }
-
-  function pmToggleStreetView() {
-    const wrap = document.getElementById('pmSvPanoWrap');
-    const btn  = document.getElementById('pmSvBtn');
-    if (!wrap || !btn) return;
-    if (svPanoOpen) {
-      pmCloseSvPane();
-    } else {
-      svPanoOpen = true;
-      wrap.classList.add('open');
-      btn.classList.add('active');
-      /* Init / move panorama to current place */
-      const r = pmFilteredData[pmActiveIndex];
-      if (!r) return;
-      if (!svPanoInstance && typeof google !== 'undefined' && google.maps) {
-        svPanoInstance = new google.maps.StreetViewPanorama(
-          document.getElementById('pmSvPano'), {
-            position: { lat: r.lat, lng: r.lng },
-            pov: { heading: pmBearing(r, ORIGIN), pitch: 5 },
-            zoom: 0,
-            addressControl: false,
-            fullscreenControl: false,
-            motionTracking: false,
-            motionTrackingControl: false,
-            showRoadLabels: false,
-          }
-        );
-      } else if (svPanoInstance) {
-        svPanoInstance.setPosition({ lat: r.lat, lng: r.lng });
-        svPanoInstance.setPov({ heading: pmBearing(r, ORIGIN), pitch: 5 });
-      }
-    }
-  }
-
-  function pmCloseSvPane() {
-    const wrap = document.getElementById('pmSvPanoWrap');
-    const btn  = document.getElementById('pmSvBtn');
-    if (wrap) wrap.classList.remove('open');
-    if (btn)  btn.classList.remove('active');
-    svPanoOpen = false;
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -2138,16 +1839,6 @@ section.pm > * { position: relative; z-index: 1; }
     }
 
     pmRenderDetail(r, i);
-    pmLoadSvThumb(r);
-
-    /* Show/hide Street View eye button based on walkable */
-    const svBtn = document.getElementById('pmSvBtn');
-    if (svBtn) {
-      svBtn.classList.toggle('walkable', !!r.walkable);
-      svBtn.classList.remove('active');
-    }
-    /* Close panorama panel when switching cards */
-    pmCloseSvPane();
 
     if (animate) pmScrollToCard(i);
   }
@@ -2201,8 +1892,6 @@ section.pm > * { position: relative; z-index: 1; }
             <div class="pm-d-sub">${r.sub}</div>
           </div>
         </div>
-
-        <div id="pmSvThumbWrap"></div>
 
         <div class="pm-d-rows">
           <div class="pm-d-row pm-copyable" role="button" tabindex="0"
@@ -2288,7 +1977,6 @@ section.pm > * { position: relative; z-index: 1; }
   ══════════════════════════════════════════════════════════════════ */
   document.addEventListener('DOMContentLoaded', () => {
     pmFilteredData = [...PM];
-    pmBuildDropdown();
     pmRenderAll();
     pmBindCarouselScroll();
     /* Scroll carousel so first card is centered after paint */
@@ -2306,7 +1994,7 @@ section.pm > * { position: relative; z-index: 1; }
 <!-- Google Maps API v2.5 — key active, unrestricted | libraries: maps, routes, marker -->
 <script
   async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEu5qN1QXT1Zt0nSdMnMNhsZH2CcKDvaM&callback=initPoiMap&loading=async&libraries=marker,streetView">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEu5qN1QXT1Zt0nSdMnMNhsZH2CcKDvaM&callback=initPoiMap&loading=async&libraries=marker">
 </script>
 
 <script>
