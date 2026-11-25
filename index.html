@@ -951,7 +951,7 @@ section.pm > * { position: relative; z-index: 1; }
 <style id="v9-restyle">
 /* v9 restyle: same behaviour, v9 tokens (mahogany/gold, 22px radius, 44px targets), night theme. */
 :root{--v9-ink:#1C1006;--v9-gold:#C9963A;--v9-goldt:#86601c}
-:root{--pm-accent:#1C1006;--pm-accent-lt:#C9963A;--pm-accent-dk:#1C1006;--pm-accent-wash:rgba(201,150,58,.12);--pm-accent-ring:rgba(201,150,58,.35);--pm-accent-btn:#1C1006;--pm-accent-line:linear-gradient(90deg,transparent,#C9963A 50%,transparent);--pm-shadow-accent:0 0 0 3px rgba(201,150,58,.28)}
+:root{--pm-accent:#1C1006;--pm-accent-lt:#86601c;--pm-accent-dk:#1C1006;--pm-accent-wash:rgba(201,150,58,.12);--pm-accent-ring:rgba(201,150,58,.35);--pm-accent-btn:#1C1006;--pm-accent-line:linear-gradient(90deg,transparent,#C9963A 50%,transparent);--pm-shadow-accent:0 0 0 3px rgba(201,150,58,.28)}
 :root[data-theme=dark]{--pm-accent:#dcb062;--pm-accent-lt:#dcb062;--pm-accent-dk:#dcb062;--pm-accent-btn:#dcb062;--pm-accent-wash:rgba(220,176,98,.14)}
 .pm-route-go{color:#F7F2E8!important}:root[data-theme=dark] .pm-route-go{color:#14100b!important}
 section.pm{background:var(--pm-bg)}
@@ -970,8 +970,6 @@ html,body{background:var(--pm-bg)}
 .pm-filter-btn.active,.pm-filter-btn[aria-pressed=true]{background:var(--v9-gold);border-color:var(--v9-gold);color:#1C1006}
 .pm-card,.pm-detail{border-radius:22px}
 .pm-route-show,.pm-route-go,.pm-detail a{min-height:44px;font-size:.8125rem;padding:0 16px}
-:root[data-theme=dark] .pm-map-wrap .gm-style{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.7)}
-:root[data-theme=dark] .pm-map-wrap gmp-advanced-marker{filter:invert(1) hue-rotate(180deg)}
 :root[data-theme=dark] .pm-card,:root[data-theme=dark] .pm-detail{color:#f3ece0}
 :root[data-theme=dark]{--pm-text-subtle:#a99b86}
 :root[data-theme=dark] .pm-card-label,:root[data-theme=dark] .pm-d-cat{color:#e8c98a!important}
@@ -979,10 +977,15 @@ html,body{background:var(--pm-bg)}
 :root[data-theme=dark] .pm-d-cta-route{color:#14100b}
 :root.embed,:root.embed body{width:100%;min-height:100dvh;overflow-x:hidden}
 :root.embed section.pm{width:100%;min-height:100dvh}
+:root[data-theme=dark] .pm-host-pick{color:#14100b}:root[data-theme=dark] .pm-open-badge.open{color:#7fd9a6}:root[data-theme=dark] .pm-open-badge.closed{color:#f2a595}
+:root[data-theme=dark] .pm-map-wrap,:root[data-theme=dark] #poiMap,:root[data-theme=dark] .pm-map-loading{background:#1f1912}
+:root[data-theme=dark] .pm-map-loading-txt{color:#c9bba8}
+:root:not([data-theme=dark]) .pm-card-dist{color:#7A6A52}
 </style>
 <script>/* v9 restyle: theme comes from ?theme=day|night (guide passes it), else the phone setting. ?embed=1 drops the card frame. */
 (function(){var q=location.search,m=q.match(/[?&]theme=(day|night|dark|light)/),d=m?(m[1]==='night'||m[1]==='dark'):matchMedia('(prefers-color-scheme:dark)').matches;
-document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();</script>
+document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();
+try{if(!navigator.clipboard)Object.defineProperty(navigator,'clipboard',{value:{writeText:function(){return Promise.reject(new Error('clipboard unavailable'))}},configurable:true})}catch(e){}</script>
 </head>
 <body>
 
