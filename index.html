@@ -1719,7 +1719,7 @@ try{new MutationObserver(function(){if(!q){q=1;requestAnimationFrame(function(){
         const path = pmDecodePoly(route.polyline.encodedPolyline);
         routePolyline = new google.maps.Polyline({
           path: path,
-          strokeColor: '#14595E',
+          strokeColor: document.documentElement.dataset.theme === 'dark' ? '#dcb062' : '#14595E',   /* v9: gold route line on the dark map */
           strokeWeight: 4,
           strokeOpacity: 0.72,
           map: poiMap
