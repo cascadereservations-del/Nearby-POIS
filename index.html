@@ -1597,6 +1597,7 @@ try{new MutationObserver(function(){if(!q){q=1;requestAnimationFrame(function(){
       center: ORIGIN,
       zoom: 17,
       mapId: '4ef6ca40dda26fa93d3d60db',
+    colorScheme: document.documentElement.dataset.theme === 'dark' ? 'DARK' : 'LIGHT',   /* v9: night theme gets the dark map */
       disableDefaultUI: false,
       zoomControl: true,
       mapTypeControl: false,
