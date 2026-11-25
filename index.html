@@ -1002,6 +1002,8 @@ html,body{background:var(--pm-bg)}
 :root:not([data-theme=dark]){--pm-text-muted:#6E5F49;--pm-text-subtle:#7A6A52}
 :root.embed .pm-ornament{display:none}
 :root.embed .pm-map-wrap{margin-top:.5rem}
+/* v9 fit: with ?fit=1 the guide sizes the frame to this page, so the sheet scrolls and not the frame */
+:root.embed.fit,:root.embed.fit body,:root.embed.fit section.pm{min-height:0}:root.embed.fit{overflow:hidden}
 .pm-eyebrow,.pm-footer-brand{opacity:1}
 :root:not([data-theme=dark]) .pm-d-sub,:root:not([data-theme=dark]) .pm-copy-hint{color:#7A6A52}
 .pm-card-name,.pm-d-name{font-weight:600}
@@ -1032,6 +1034,8 @@ html,body{background:var(--pm-bg)}
 <script>/* v9 restyle: theme comes from ?theme=day|night (guide passes it), else the phone setting. ?embed=1 drops the card frame. */
 (function(){var q=location.search,m=q.match(/[?&]theme=(day|night|dark|light)/),d=m?(m[1]==='night'||m[1]==='dark'):matchMedia('(prefers-color-scheme:dark)').matches;
 document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();
+(function(){if(!/[?&]fit=1/.test(location.search)||parent===window)return;document.documentElement.classList.add('fit');function p(){var b=document.body;if(b)parent.postMessage({type:'CASCADE_MAP_HEIGHT',h:Math.ceil(b.getBoundingClientRect().height)},'*')}
+document.addEventListener('DOMContentLoaded',function(){p();if(window.ResizeObserver)new ResizeObserver(p).observe(document.body);addEventListener('load',p)})})();
 try{if(!navigator.clipboard)Object.defineProperty(navigator,'clipboard',{value:{writeText:function(){return Promise.reject(new Error('clipboard unavailable'))}},configurable:true})}catch(e){}
 /* v9 polish (lane m3): tag emoji-only icon spans so CSS can paint line icons; the DOM text is untouched. */
 var MAP={"\u{1F6B6}":"walk","\u{1F697}":"car","\u{1F6FA}":"scooter","\u{1F4CD}":"pin","\u{1F550}":"clock","\u{1F4B0}":"banknote","\u{1F4DE}":"phone","\u{1F37D}":"utensils","\u{1F371}":"basket","\u{1F319}":"moon","\u{1F969}":"flame","\u{1F35C}":"bowl","\u{1F37A}":"wine","\u{1F375}":"coffee"},SEL=".pm-route-mode,.pm-d-row-icon,.pm-map-loader-pin,.pm-map-fail-icon,.dm-route-mode,.dm-d-icon,.dm-ftab .tab-emoji,.dm-map-loader-pin",q=0;
