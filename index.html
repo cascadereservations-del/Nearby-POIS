@@ -948,6 +948,41 @@ section.pm > * { position: relative; z-index: 1; }
 }
 .pm-card:focus-visible { outline-offset: -2px; }
 </style>
+<style id="v9-restyle">
+/* v9 restyle: same behaviour, v9 tokens (mahogany/gold, 22px radius, 44px targets), night theme. */
+:root{--v9-ink:#1C1006;--v9-gold:#C9963A;--v9-goldt:#86601c}
+:root{--pm-accent:#1C1006;--pm-accent-lt:#C9963A;--pm-accent-dk:#1C1006;--pm-accent-wash:rgba(201,150,58,.12);--pm-accent-ring:rgba(201,150,58,.35);--pm-accent-btn:#1C1006;--pm-accent-line:linear-gradient(90deg,transparent,#C9963A 50%,transparent);--pm-shadow-accent:0 0 0 3px rgba(201,150,58,.28)}
+:root[data-theme=dark]{--pm-accent:#dcb062;--pm-accent-lt:#dcb062;--pm-accent-dk:#dcb062;--pm-accent-btn:#dcb062;--pm-accent-wash:rgba(220,176,98,.14)}
+.pm-route-go{color:#F7F2E8!important}:root[data-theme=dark] .pm-route-go{color:#14100b!important}
+section.pm{background:var(--pm-bg)}
+:root[data-theme=dark]{color-scheme:dark;--v9-ink:#f3ece0;--v9-gold:#dcb062;--v9-goldt:#dcb062;
+ --pm-bg:#14100b;--pm-parchment:#1b150f;--pm-surface:rgba(31,25,18,.92);--pm-surface-2:#1f1912;--pm-glass:rgba(31,25,18,.65);--pm-mahogany:#f3ece0;
+ --pm-text-primary:#f3ece0;--pm-text-body:#c9bba8;--pm-text-muted:#b3a58f;--pm-text-subtle:#8c7e6b;
+ --pm-border:rgba(255,240,215,.18);--pm-sep:rgba(255,240,215,.12)}
+html,body{background:var(--pm-bg)}
+:root[data-theme=dark] body{background:#14100b}
+:root.embed body{padding:0}
+:root.embed .pm-header,:root.embed .pm-footer{display:none}
+:root[data-theme=dark] .pm-filter-btn{background:rgba(255,240,215,.06);color:#c9bba8;border-color:rgba(255,240,215,.2)}
+:root[data-theme=dark] .pm-filter-btn.active,:root[data-theme=dark] .pm-filter-btn[aria-pressed=true]{background:#dcb062;color:#14100b;border-color:#dcb062}
+:root.embed section.pm{border-radius:0;box-shadow:none;max-width:none}
+.pm-filter-btn{min-height:44px;font-size:.875rem;padding:0 16px}
+.pm-filter-btn.active,.pm-filter-btn[aria-pressed=true]{background:var(--v9-gold);border-color:var(--v9-gold);color:#1C1006}
+.pm-card,.pm-detail{border-radius:22px}
+.pm-route-show,.pm-route-go,.pm-detail a{min-height:44px;font-size:.8125rem;padding:0 16px}
+:root[data-theme=dark] .pm-map-wrap .gm-style{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.7)}
+:root[data-theme=dark] .pm-map-wrap gmp-advanced-marker{filter:invert(1) hue-rotate(180deg)}
+:root[data-theme=dark] .pm-card,:root[data-theme=dark] .pm-detail{color:#f3ece0}
+:root[data-theme=dark]{--pm-text-subtle:#a99b86}
+:root[data-theme=dark] .pm-card-label,:root[data-theme=dark] .pm-d-cat{color:#e8c98a!important}
+.pm-d-row.pm-copyable{min-height:44px;align-items:center}
+:root[data-theme=dark] .pm-d-cta-route{color:#14100b}
+:root.embed,:root.embed body{width:100%;min-height:100dvh;overflow-x:hidden}
+:root.embed section.pm{width:100%;min-height:100dvh}
+</style>
+<script>/* v9 restyle: theme comes from ?theme=day|night (guide passes it), else the phone setting. ?embed=1 drops the card frame. */
+(function(){var q=location.search,m=q.match(/[?&]theme=(day|night|dark|light)/),d=m?(m[1]==='night'||m[1]==='dark'):matchMedia('(prefers-color-scheme:dark)').matches;
+document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();</script>
 </head>
 <body>
 
