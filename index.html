@@ -967,7 +967,7 @@ html,body{background:var(--pm-bg)}
 :root[data-theme=dark] .pm-filter-btn.active,:root[data-theme=dark] .pm-filter-btn[aria-pressed=true]{background:#dcb062;color:#14100b;border-color:#dcb062}
 :root.embed section.pm{border-radius:0;box-shadow:none;max-width:none}
 .pm-filter-btn{min-height:44px;font-size:.875rem;padding:0 16px}
-.pm-filter-btn.active,.pm-filter-btn[aria-pressed=true]{background:var(--v9-gold);border-color:var(--v9-gold);color:#1C1006}
+.pm-filter-btn.active,.pm-filter-btn[aria-pressed=true]{background:#1C1006;border-color:#1C1006;color:#F7F2E8}
 .pm-card,.pm-detail{border-radius:22px}
 .pm-route-show,.pm-route-go,.pm-detail a{min-height:44px;font-size:.8125rem;padding:0 16px}
 :root[data-theme=dark] .pm-card,:root[data-theme=dark] .pm-detail{color:#f3ece0}
@@ -981,11 +981,62 @@ html,body{background:var(--pm-bg)}
 :root[data-theme=dark] .pm-map-wrap,:root[data-theme=dark] #poiMap,:root[data-theme=dark] .pm-map-loading{background:#1f1912}
 :root[data-theme=dark] .pm-map-loading-txt{color:#c9bba8}
 :root:not([data-theme=dark]) .pm-card-dist{color:#7A6A52}
+/* ---- v9 polish (lane m3): one primary fill, cream pill secondaries, legible type, line icons. Same behaviour and layout. ---- */
+[data-v9i]{font-size:0!important;line-height:0!important;display:inline-flex;align-items:center;justify-content:center;flex:none}
+[data-v9i]::before{content:"";width:var(--v9s,16px);height:var(--v9s,16px);background:currentColor;-webkit-mask:var(--v9ic) center/contain no-repeat;mask:var(--v9ic) center/contain no-repeat}
+[data-v9i=pin]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z'/%3E%3Ccircle cx='12' cy='10' r='2.6'/%3E%3C/svg%3E")}
+[data-v9i=car]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 17h2a1 1 0 0 0 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4a1 1 0 0 0 1 1h2'/%3E%3Ccircle cx='7' cy='17' r='2'/%3E%3Cpath d='M9 17h6'/%3E%3Ccircle cx='17' cy='17' r='2'/%3E%3C/svg%3E")}
+[data-v9i=scooter]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='5.5' cy='17.5' r='2.5'/%3E%3Ccircle cx='18.5' cy='17.5' r='2.5'/%3E%3Cpath d='M14 5h2.6l1.9 10'/%3E%3Cpath d='M8 17.5h8l1.7-5.2'/%3E%3Cpath d='M3 15a4.5 4.5 0 0 1 4.5-4.5H11v7'/%3E%3Cpath d='M5.5 7.5h4.5'/%3E%3C/svg%3E")}
+[data-v9i=utensils]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V2'/%3E%3Cpath d='M7 2v20'/%3E%3Cpath d='M21 15V2a5 5 0 0 0-5 5v6a2 2 0 0 0 2 2h3zm0 0v7'/%3E%3C/svg%3E")}
+[data-v9i=coffee]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 8h1a4 4 0 0 1 0 8h-1'/%3E%3Cpath d='M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z'/%3E%3Cpath d='M6 2v3M10 2v3M14 2v3'/%3E%3C/svg%3E")}
+[data-v9i=basket]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 11h20'/%3E%3Cpath d='M3.5 11l1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.6-7.4'/%3E%3Cpath d='M5 11l4-7M19 11l-4-7'/%3E%3Cpath d='M9 15v2M12 15v2M15 15v2'/%3E%3C/svg%3E")}
+[data-v9i=banknote]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='20' height='12' rx='2'/%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3Cpath d='M6 12h.01M18 12h.01'/%3E%3C/svg%3E")}
+[data-v9i=moon]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E")}
+[data-v9i=flame]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E")}
+[data-v9i=clock]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='M12 6.5V12l3.5 2'/%3E%3C/svg%3E")}
+[data-v9i=phone]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E")}
+[data-v9i=walk]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='13' cy='4.5' r='1.6'/%3E%3Cpath d='M11 21l2-6-3-3 1-4 4 2 2.5 1'/%3E%3Cpath d='M9 11l-3 1.5M13 15l2.5 6'/%3E%3C/svg%3E")}
+[data-v9i=bowl]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11h18a9 9 0 0 1-18 0z'/%3E%3Cpath d='M8 21h8'/%3E%3Cpath d='M10 3L8.5 8M14 3l-1.5 5'/%3E%3C/svg%3E")}
+[data-v9i=wine]{--v9ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 22h8M12 15v7'/%3E%3Cpath d='M6 3h12l-1.2 7a4.8 4.8 0 0 1-9.6 0z'/%3E%3C/svg%3E")}
+
+:root:not([data-theme=dark]){--pm-text-muted:#6E5F49;--pm-text-subtle:#7A6A52}
+:root.embed .pm-ornament{display:none}
+:root.embed .pm-map-wrap{margin-top:.5rem}
+.pm-eyebrow,.pm-footer-brand{opacity:1}
+:root:not([data-theme=dark]) .pm-d-sub,:root:not([data-theme=dark]) .pm-copy-hint{color:#7A6A52}
+.pm-card-name,.pm-d-name{font-weight:600}
+.pm-card-name{font-size:1.1rem}
+.pm-d-name{font-size:1.25rem}
+.pm-route-bar{background:#FFFDF8;border:1px solid rgba(28,16,6,.14)}
+.pm-route-show{background:#FFFDF8;color:#1C1006;border:1px solid rgba(28,16,6,.22)}
+.pm-route-show:hover{background:#F7F2E8}
+.pm-route-go,.pm-route-go:hover{box-shadow:none}
+:root[data-theme=dark] .pm-route-bar{background:rgba(255,240,215,.05);border-color:rgba(255,240,215,.18)}
+:root[data-theme=dark] .pm-route-show{background:rgba(255,240,215,.06);color:#f3ece0;border-color:rgba(255,240,215,.22)}
+.pm-route-show svg,.pm-route-go svg,.pm-d-cta-route svg,.pm-d-cta-maps svg{stroke-width:1.5}
+.pm-detail .pm-d-cta-route,.pm-detail .pm-d-cta-maps{min-height:44px;min-width:0;padding:0 10px;gap:.35rem;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:0;text-transform:none;text-decoration:none;white-space:nowrap}
+.pm-detail .pm-d-cta-route{background:#1C1006;color:#F7F2E8;border:1px solid #1C1006;box-shadow:none}
+.pm-detail .pm-d-cta-maps{background:#FFFDF8;color:#1C1006;border:1px solid rgba(28,16,6,.22)}
+.pm-detail .pm-d-cta-maps:hover{background:#F7F2E8;border-color:#1C1006}
+:root[data-theme=dark] .pm-detail .pm-d-cta-route{background:#dcb062;color:#14100b;border-color:#dcb062}
+:root[data-theme=dark] .pm-detail .pm-d-cta-maps{background:rgba(255,240,215,.06);color:#f3ece0;border-color:rgba(255,240,215,.22)}
+.pm-card-walk-badge{top:auto;right:auto;left:50%;bottom:-9px;transform:translateX(-50%);background:#FFFDF8!important;color:#1C1006!important;border:1px solid rgba(28,16,6,.22);font-size:.6rem;line-height:1.2;padding:.1rem .42rem}
+:root[data-theme=dark] .pm-card-walk-badge{background:#1f1912!important;color:#f3ece0!important;border-color:rgba(255,240,215,.28)}
+.pm-filters{scroll-padding-left:1rem}
+.pm-route-mode{--v9s:20px;color:var(--pm-text-primary)}
+.pm-d-row-icon{--v9s:16px;margin-top:.05rem;color:#86601c}
+:root[data-theme=dark] .pm-d-row-icon,:root[data-theme=dark] .pm-map-loader-pin,:root[data-theme=dark] .pm-map-fail-icon{color:#dcb062}
+.pm-map-loader-pin{--v9s:18px;color:#86601c}
+.pm-map-fail-icon{--v9s:30px;color:#86601c}
 </style>
 <script>/* v9 restyle: theme comes from ?theme=day|night (guide passes it), else the phone setting. ?embed=1 drops the card frame. */
 (function(){var q=location.search,m=q.match(/[?&]theme=(day|night|dark|light)/),d=m?(m[1]==='night'||m[1]==='dark'):matchMedia('(prefers-color-scheme:dark)').matches;
 document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();
-try{if(!navigator.clipboard)Object.defineProperty(navigator,'clipboard',{value:{writeText:function(){return Promise.reject(new Error('clipboard unavailable'))}},configurable:true})}catch(e){}</script>
+try{if(!navigator.clipboard)Object.defineProperty(navigator,'clipboard',{value:{writeText:function(){return Promise.reject(new Error('clipboard unavailable'))}},configurable:true})}catch(e){}
+/* v9 polish (lane m3): tag emoji-only icon spans so CSS can paint line icons; the DOM text is untouched. */
+var MAP={"\u{1F6B6}":"walk","\u{1F697}":"car","\u{1F6FA}":"scooter","\u{1F4CD}":"pin","\u{1F550}":"clock","\u{1F4B0}":"banknote","\u{1F4DE}":"phone","\u{1F37D}":"utensils","\u{1F371}":"basket","\u{1F319}":"moon","\u{1F969}":"flame","\u{1F35C}":"bowl","\u{1F37A}":"wine","\u{1F375}":"coffee"},SEL=".pm-route-mode,.pm-d-row-icon,.pm-map-loader-pin,.pm-map-fail-icon,.dm-route-mode,.dm-d-icon,.dm-ftab .tab-emoji,.dm-map-loader-pin",q=0;
+function tag(){var n=document.querySelectorAll(SEL),i,e,t,k;for(i=0;i<n.length;i++){e=n[i];t=(e.textContent||"").replace(/\uFE0F/g,"").trim();k=t?MAP[String.fromCodePoint(t.codePointAt(0))]:0;if(k){if(e.getAttribute("data-v9i")!==k){e.setAttribute("data-v9i",k);e.setAttribute("aria-hidden","true")}}else if(e.hasAttribute("data-v9i")&&t){e.removeAttribute("data-v9i");e.removeAttribute("aria-hidden")}}}
+try{new MutationObserver(function(){if(!q){q=1;requestAnimationFrame(function(){q=0;tag()})}}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});document.addEventListener("DOMContentLoaded",tag)}catch(e){}</script>
 </head>
 <body>
 
