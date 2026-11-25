@@ -1004,6 +1004,8 @@ html,body{background:var(--pm-bg)}
 :root.embed .pm-map-wrap{margin-top:.5rem}
 /* v9 fit: with ?fit=1 the guide sizes the frame to this page, so the sheet scrolls and not the frame */
 :root.embed.fit,:root.embed.fit body,:root.embed.fit section.pm{min-height:0}:root.embed.fit{overflow:hidden}
+/* the frame is as tall as the page, so a toast fixed to its bottom is off screen: show it just above the tap */
+:root.embed.fit .pm-copy-toast{position:absolute;bottom:auto;top:max(8px,calc(var(--v9ty,200px) - 64px))}
 .pm-eyebrow,.pm-footer-brand{opacity:1}
 :root:not([data-theme=dark]) .pm-d-sub,:root:not([data-theme=dark]) .pm-copy-hint{color:#7A6A52}
 .pm-card-name,.pm-d-name{font-weight:600}
@@ -1034,7 +1036,7 @@ html,body{background:var(--pm-bg)}
 <script>/* v9 restyle: theme comes from ?theme=day|night (guide passes it), else the phone setting. ?embed=1 drops the card frame. */
 (function(){var q=location.search,m=q.match(/[?&]theme=(day|night|dark|light)/),d=m?(m[1]==='night'||m[1]==='dark'):matchMedia('(prefers-color-scheme:dark)').matches;
 document.documentElement.dataset.theme=d?'dark':'light';if(/[?&]embed=1/.test(q))document.documentElement.classList.add('embed')})();
-(function(){if(!/[?&]fit=1/.test(location.search)||parent===window)return;document.documentElement.classList.add('fit');function p(){var b=document.body;if(b)parent.postMessage({type:'CASCADE_MAP_HEIGHT',h:Math.ceil(b.getBoundingClientRect().height)},'*')}
+(function(){if(!/[?&]fit=1/.test(location.search)||parent===window)return;document.documentElement.classList.add('fit');document.addEventListener('click',function(e){document.documentElement.style.setProperty('--v9ty',Math.round(e.clientY)+'px')},true);function p(){var b=document.body;if(b)parent.postMessage({type:'CASCADE_MAP_HEIGHT',h:Math.ceil(b.getBoundingClientRect().height)},'*')}
 document.addEventListener('DOMContentLoaded',function(){p();if(window.ResizeObserver)new ResizeObserver(p).observe(document.body);addEventListener('load',p)})})();
 try{if(!navigator.clipboard)Object.defineProperty(navigator,'clipboard',{value:{writeText:function(){return Promise.reject(new Error('clipboard unavailable'))}},configurable:true})}catch(e){}
 /* v9 polish (lane m3): tag emoji-only icon spans so CSS can paint line icons; the DOM text is untouched. */
